@@ -1,15 +1,12 @@
 <template>
-    <div class="text-3xl text-white">Hello Tailwind</div>
-    <button class="btn btn-primary">Hello DaiyUI</button>
-
-    <header>
+    <!-- <header>
         <div class="wrapper">
             <nav>
                 <RouterLink to="/">Home</RouterLink>
                 <RouterLink to="/about">About</RouterLink>
             </nav>
         </div>
-    </header>
+    </header> -->
 
     <RouterView />
 </template>

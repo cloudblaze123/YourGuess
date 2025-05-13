@@ -7,6 +7,19 @@ export enum Result {
 }
 
 
+export function getResultMessage(result: Result): string {
+    switch (result) {
+        case Result.CORRECT:
+            return "Correct";
+        case Result.TOO_SMALL:
+            return "Too small";
+        case Result.TOO_BIG:
+            return "Too big";
+        default:
+            return "Invalid result.";
+    }
+}
+
 
 
 export class Game{
