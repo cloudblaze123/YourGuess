@@ -1,31 +1,20 @@
 <template>
-    <header class="text-3xl font-bold">YourGuess</header>
-    <main class="flex flex-col">
-        <div>{{ resultMessage }}</div>
-        <input type="number" v-model="guess">
-        <button class="btn btn-primary" @click="handleGuess">Guess</button>
-    </main>
+    <!-- name of each tab group should be unique -->
+    <div class="tabs tabs-border">
+        <input type="radio" name="my_tabs_2" class="tab" aria-label="Game" checked="checked"/>
+        <div class="tab-content border-base-300 bg-base-100 p-10">
+            <GameView />
+        </div>
+
+        <input type="radio" name="my_tabs_2" class="tab" aria-label="Train" />
+        <div class="tab-content border-base-300 bg-base-100 p-10">
+            <TrainView />
+        </div>
+    </div>
 </template>
 
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
-import { getResultMessage } from '@/game/game'
-import { Result, Game } from '@/game/game'
-
-
-const game = new Game()
-game.initGame()
-
-
-const result = ref(Result.CORRECT)
-const resultMessage = computed(() => getResultMessage(Number(result.value)))
-
-const guess = ref(0)
-
-
-function handleGuess() {
-    result.value = game.guess(guess.value)
-}
-
+import GameView from './GameView.vue';
+import TrainView from './TrainView.vue';
 </script>
