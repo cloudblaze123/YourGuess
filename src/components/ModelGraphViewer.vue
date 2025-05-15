@@ -5,7 +5,6 @@
 <script setup lang="ts">
 import { onMounted, onUnmounted, ref } from 'vue';
 import * as echarts from 'echarts';
-import { and } from 'mathjs';
 
 
 const weights = ref([
