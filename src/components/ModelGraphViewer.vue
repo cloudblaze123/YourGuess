@@ -15,84 +15,18 @@ const weights = ref([
 ])
 
 
-// // 定义数据
-// const data = [
-//     {
-//         name: 'Node 1',
-//         x: 300,
-//         y: 300
-//     },
-//     {
-//         name: 'Node 2',
-//         x: 800,
-//         y: 300
-//     },
-//     {
-//         name: 'Node 3',
-//         x: 550,
-//         y: 100
-//     },
-//     {
-//         name: 'Node 4',
-//         x: 550,
-//         y: 500
-//     }
-// ];
-
-
-// const links = [
-//     {
-//         source: 0,
-//         target: 1,
-//         symbolSize: [5, 20],
-//         label: {
-//             show: true
-//         },
-//         lineStyle: {
-//             width: 5,
-//             curveness: 0.2
-//         }
-//     },
-//     {
-//         source: 'Node 2',
-//         target: 'Node 1',
-//         label: {
-//             show: true
-//         },
-//         lineStyle: {
-//             curveness: 0.2
-//         }
-//     },
-//     {
-//         source: 'Node 1',
-//         target: 'Node 3'
-//     },
-//     {
-//         source: 'Node 2',
-//         target: 'Node 3'
-//     },
-//     {
-//         source: 'Node 2',
-//         target: 'Node 4'
-//     },
-//     {
-//         source: 'Node 1',
-//         target: 'Node 4'
-//     }
-// ]
-const data:Object[] = []
-const links:Object[] = []
+const data: Object[] = []
+const links: Object[] = []
 
 
 function prepareData() {
-    const inputNodes = []
-    const outputNodes = []
-    const inputLinks:Array<object[]> = []
+    const inputNodes = new Array(weights.value[0].length)
+    const outputNodes = new Array(weights.value.length)
+    const inputLinks: Array<object[]> = []
 
-    inputNodes.length = weights.value[0].length
-    outputNodes.length = weights.value.length
-    inputLinks.length = outputNodes.length
-    inputLinks.fill([])
+    for (let i = 0; i < outputNodes.length; i++) {
+        inputLinks[i] = new Array(inputNodes.length)
+    }
 
     for (let i = 0; i < inputNodes.length; i++) {
         inputNodes[i] = {
@@ -108,16 +42,28 @@ function prepareData() {
             y: i * 100 + 100
         }
     }
+
+
+    const maxWeight = Math.max(...weights.value.flat())
+    const minWeight = Math.min(...weights.value.flat())
+    let weightRange = maxWeight - minWeight
+    if (weightRange === 0) {
+        weightRange = 1
+    }
+
     for (let i = 0; i < inputNodes.length; i++) {
         for (let j = 0; j < outputNodes.length; j++) {
-            inputLinks[i].push({
+            inputLinks[j][i] = {
                 source: `Input ${i}`,
                 target: `Output ${j}`,
                 label: {
                     show: true,
                     formatter: `${weights.value[j][i]}`
+                },
+                lineStyle: {
+                    width: weights.value[j][i] / weightRange * 5 + 1,
                 }
-            })
+            }
         }
     }
 
