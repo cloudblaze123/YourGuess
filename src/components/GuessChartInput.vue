@@ -1,5 +1,5 @@
 <template>
-    <div ref="chartRef" style="width: 600px; height: 400px;"></div>
+    <div ref="chartRef" style="width: 600px; height: 600px;"></div>
 </template>
 
 
@@ -38,12 +38,12 @@ import * as echarts from 'echarts';
 const data: any[] = []
 
 function prepareData() {
-    const xArray: number[] = [...guesses];
-    const yArray: number[] = [];
+    const xArray: number[] = [];
+    const yArray: number[] = [...guesses];
     const labelArray: string[] = [];
 
     for (let i = 0; i < guesses.length; i++) {
-        yArray.push(i+1);
+        xArray.push(i + 1);
     }
     for (let i = 0; i < resultMessages.value.length; i++) {
         labelArray.push(guesses[i] + '\n' + resultMessages.value[i]);
@@ -69,24 +69,23 @@ let chartInstance: echarts.ECharts | null = null;
 
 function refreshChart() {
     prepareData();
-    console.log(data)
 
     const game = props.gameInstance
 
-    let yAxis = [
+    let xAxis = [
         {
             min: 0,
             max: data.length + 2,
         }
     ]
-    let xAxis = [
+    let yAxis = [
         {
             min: 1,
             max: 100,
         }
     ]
     if (game) {
-        xAxis = [
+        yAxis = [
             {
                 min: game.min - 1,
                 max: game.max + 1,
@@ -108,7 +107,7 @@ function refreshChart() {
     }
 }
 
-refreshChart()
+
 watch(guesses, refreshChart)
 
 
@@ -127,12 +126,6 @@ function initChart() {
 
 
     option = {
-        // tooltip: {
-        //     trigger: 'axis',
-        //     axisPointer: {
-        //         type: 'shadow'
-        //     }
-        // },
         grid: {
             left: '3%',
             right: '4%',
@@ -141,6 +134,7 @@ function initChart() {
         },
         xAxis: [
             {
+                name: '次数',
                 type: 'value',
                 // interval: 0, // 显示所有刻度标签
                 minInterval: 1, // 最小间隔
@@ -158,7 +152,16 @@ function initChart() {
         yAxis: [
             {
                 type: 'value',
-                name: '次数',
+                axisPointer: {
+                    show: true,
+                    type: 'line',
+                    label: {
+                        formatter: (params) => {
+                            const value = Math.floor(Number(params.value) + 0.5);
+                            return value.toString();
+                        }
+                    }
+                },
             }
         ],
         series: [
@@ -178,30 +181,34 @@ function initChart() {
         ],
         dataZoom: [
             {
-                type: 'inside'
+                type: 'inside',
+                yAxisIndex: 0,
             }
-        ]
+        ],
     };
 
 
     option && chartInstance.setOption(option);
 
     chartInstance.getZr().on('click', function (params: MouseEvent) {
-        // 获取 x 轴的值
-        const offsetX = params.offsetX;
-        let xAxisValue: number = chartInstance?.convertFromPixel(
-            { xAxisIndex: 0 },
-            offsetX
+        // 获取 y 轴的值
+        const offsetY = params.offsetY;
+        let yAxisValue: number = chartInstance?.convertFromPixel(
+            { yAxisIndex: 0 },
+            offsetY
         ) as number
-        // 对 x 四舍五入取整
-        xAxisValue = Math.floor(xAxisValue+0.5)
+        // 对 y 四舍五入取整
+        yAxisValue = Math.floor(yAxisValue + 0.5)
 
-        console.log(xAxisValue)
+        console.log(yAxisValue)
 
-        emit('guessed', xAxisValue)
+        emit('guessed', yAxisValue)
 
         refreshChart()
     });
+
+
+    refreshChart();
 }
 
 
