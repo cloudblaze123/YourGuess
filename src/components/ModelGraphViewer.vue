@@ -5,6 +5,7 @@
 <script setup lang="ts">
 import { onMounted, onUnmounted, ref } from 'vue';
 import * as echarts from 'echarts';
+import { and } from 'mathjs';
 
 
 const weights = ref([
@@ -16,7 +17,7 @@ const weights = ref([
 
 
 const data: Object[] = []
-const links: Object[] = []
+const links: any[] = []
 
 
 function prepareData() {
@@ -123,6 +124,28 @@ function initChart() {
     };
 
     option && chartInstance.setOption(option);
+
+    chartInstance.on('click', function (params: any) {
+        if (params.dataType !== 'node') {
+            return
+        }
+        console.log(params.data);
+        
+        const name = params.data.name;
+        for(const link of links){
+            if(link.source !== name && link.target !== name){
+                link.lineStyle.opacity = 0.1;
+            } else {
+                link.lineStyle.opacity = 0.9;
+            }
+        }
+
+        chartInstance?.setOption({
+            series: {
+                links: links    
+            }
+        })
+    });
 }
 
 // 在组件挂载后初始化图表
