@@ -24,11 +24,10 @@ class Agent {
     private _next: () => void = () => { };
     
     update() {
-        const promise = new Promise<void>(resolve => {
+        return new Promise<void>(resolve => {
             this._next = resolve;
+            this.onUpdate();
         });
-        this.onUpdate();
-        return promise
     }    
 
 }
