@@ -23,27 +23,46 @@ export function getResultMessage(result: Result): string {
 
 
 export class Game{
-    targetNumber:number = -1;
-    guessNumber:number = -1;
+    target:number = -1;
+
+    guessNum:number = -1;
+    reversal:boolean = false;
 
     min:number = 1;
     max:number = 100;
 
+    history:{ guess:number, result:Result }[] = [];
+
 
     initGame():void{
-        this.targetNumber = this.generateRandomNumber(this.min, this.max);
+        this.target = this._generateRandomNumber(this.min, this.max);
+        this.history.length = 0;
     }
 
-    private generateRandomNumber(min: number, max: number): number {
+
+    private _generateRandomNumber(min: number, max: number): number {
         return Math.floor(Math.random() * (max - min + 1)) + min;
     }
 
+
+    next(){
+        this.guess(this.guessNum);
+    }
+
+
     guess(number:number):Result{
-        if(number == this.targetNumber){
+        const result = this._guess(number);
+        this.history.push({guess:number, result:result});
+        return result;
+    }
+
+
+    private _guess(number:number):Result{
+        if(number === this.target){
             return Result.CORRECT;
         }
 
-        if(number > this.targetNumber){
+        if(number > this.target){
             return Result.TOO_BIG;
         }else{
             return Result.TOO_SMALL;

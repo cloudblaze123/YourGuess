@@ -7,4 +7,4 @@ const guess = 50;
 const result = game.guess(guess);
 
 console.log(result);
-console.log(`The target number is ${game.targetNumber}`);
+console.log(`The target number is ${game.target}`);

@@ -28,7 +28,7 @@ import { game } from '@/game/gameProvider'
 const debug = true
 
 
-const target = ref<number>(game.targetNumber)
+const target = ref<number>(game.target)
 
 const guess = ref<number>(0)
 
@@ -53,7 +53,7 @@ function handleGuess(guessNumber: number) {
 
 function resetGame() {
     game.initGame()
-    target.value = game.targetNumber
+    target.value = game.target
     guess.value = 0
     guessHistory.value.length = 0
     resultHistory.value.length = 0
