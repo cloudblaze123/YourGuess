@@ -21,11 +21,14 @@ class Agent {
     // 以下部分仅供游戏环境访问，外部不可访问
     action: Action = new NoneAction();
     
-    _next: () => void = () => { };
+    private _next: () => void = () => { };
     
-    update(next: () => void) {
-        this._next = next;
+    update() {
+        const promise = new Promise<void>(resolve => {
+            this._next = resolve;
+        });
         this.onUpdate();
+        return promise
     }    
 
 }

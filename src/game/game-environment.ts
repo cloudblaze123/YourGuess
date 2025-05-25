@@ -10,54 +10,58 @@ class GameEnvironment {
 
     lastAgent: Agent | null = null;
 
-    onGameOver: () => void = () => {};
+    onGameOver: () => void = () => { };
 
-    
-    constructor(game: Game, attacker:Agent, defender:Agent) {
+
+    constructor(game: Game, attacker: Agent, defender: Agent) {
         this.game = game;
         this.attacker = attacker;
         this.defender = defender;
     }
-        
-    
-    start(){
+
+
+    start() {
         this.game.initGame();
         console.log(`Target number is ${this.game.target}`);
+        this.loop();
+    }
+
+
+    async loop() {
         this._update(this.attacker);
+
+        while (true) {
+            if (this.isGameOver()) {
+                console.log("Game over");
+                break;
+            }
+
+
+            const agent = this.getAgentToPlay();
+            await this._update(agent);
+
+
+            const action = this.lastAgent?.action;
+            if (action instanceof GuessAction) {
+                this.game.guessNum = action.guess;
+                console.log(`Attacker guessed ${action.guess}`);
+            }
+            if (action instanceof ReverseResultAction) {
+                this.game.reversal = action.reverse;
+                console.log(`Defender reversed the result or not:`, action.reverse);
+            }
+
+
+            if (this.lastAgent === this.defender) {
+                this.game.next()
+            }
+        }
     }
 
 
-    next(){
-        if (this.isGameOver()) {
-            console.log("Game over");
-            return;
-        }
-        
-
-        const action = this.lastAgent?.action;
-        if (action instanceof GuessAction) {
-            this.game.guessNum = action.guess;
-            console.log(`Attacker guessed ${action.guess}`);
-        }
-        if (action instanceof ReverseResultAction) {
-            this.game.reversal = action.reverse;
-            console.log(`Defender reversed the result or not:`, action.reverse);
-        }
-
-
-        if (this.lastAgent === this.defender) {
-            this.game.next()
-        }
-
-
-        const agent = this.getAgentToPlay();
-        this._update(agent);
-    }
-
-
-    _update(agent: Agent) {
+    async _update(agent: Agent) {
         this.lastAgent = agent;
-        agent.update(this.next.bind(this));
+        await agent.update();
     }
 
 
