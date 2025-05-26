@@ -74,8 +74,8 @@ function prepareData() {
 }
 prepareData()
 
-console.log(data)
-console.log(links)
+// console.log(data)
+// console.log(links)
 
 
 

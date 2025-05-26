@@ -10,8 +10,6 @@ class GameEnvironment {
 
     lastAgent: Agent | null = null;
 
-    onGameOver: () => void = () => { };
-
 
     constructor(game: Game, attacker: Agent, defender: Agent) {
         this.game = game;
@@ -21,6 +19,8 @@ class GameEnvironment {
 
 
     start() {
+        this.lastAgent = null;
+
         this.game.initGame();
         console.log(`Target number is ${this.game.target}`);
         this.loop();
@@ -28,16 +28,14 @@ class GameEnvironment {
 
 
     async loop() {
-        this._update(this.attacker);
-
         while (true) {
-            if (this.isGameOver()) {
+            if (this.game.isGameOver()) {
                 console.log("Game over");
                 break;
             }
 
 
-            const agent = this.getAgentToPlay();
+            const agent = this.getAgentToAct();
             await this._update(agent);
 
 
@@ -65,16 +63,12 @@ class GameEnvironment {
     }
 
 
-    isGameOver(): boolean {
-        const guess = this.game.guessNum;
-        if (guess === this.game.target) {
-            return true;
+    getAgentToAct(): Agent {
+        // 如果刚开始，则攻击方（猜数方）先行动
+        if (!this.lastAgent){
+            return this.attacker;
         }
-        return false;
-    }
 
-
-    getAgentToPlay(): Agent {
         if (this.isAttackerTurn()) {
             return this.attacker;
         }

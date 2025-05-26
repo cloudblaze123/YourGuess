@@ -39,20 +39,40 @@ const guessHistory = ref<number[]>([])
 const resultHistory = ref<Result[]>([])
 
 
-resetGame()
 
 
-function handleGuess(guessNumber: number) {
-    guess.value = guessNumber
-    result.value = game.guess(guessNumber)
+import { GameEnvironment } from '@/game/game-environment';
+import { HumanAgent } from '@/game/agent/human-agent';
+import { HonestAgent } from '@/game/agent/honest-agent';
 
-    guessHistory.value.push(guessNumber)
+
+
+const attacker = new HumanAgent();
+const defender = new HonestAgent();
+const gameEnv = new GameEnvironment(game, attacker, defender);
+
+
+
+
+game.onUpdate = () => {
+    guess.value = game.history[game.history.length - 1].guess
+    result.value = game.history[game.history.length - 1].result
+    
+    guessHistory.value.push(guess.value)
     resultHistory.value.push(result.value)
 }
 
 
+resetGame()
+
+
+function handleGuess(guessNumber: number) {
+    attacker.guess(guessNumber)
+}
+
+
 function resetGame() {
-    game.initGame()
+    gameEnv.start();
     target.value = game.target
     guess.value = 0
     guessHistory.value.length = 0

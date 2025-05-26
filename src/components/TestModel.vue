@@ -4,5 +4,5 @@
 
 
 <script setup lang="ts">
-import '@/model/base'
+// import '@/model/base'
 </script>

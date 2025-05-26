@@ -33,6 +33,8 @@ export class Game{
 
     history:{ guess:number, result:Result }[] = [];
 
+    onUpdate: () => void = () => {};
+
 
     initGame():void{
         this.target = this._generateRandomNumber(this.min, this.max);
@@ -47,6 +49,7 @@ export class Game{
 
     next(){
         this.guess(this.guessNum);
+        this.onUpdate();
     }
 
 
@@ -69,6 +72,17 @@ export class Game{
         }
     }
 
+
+    isGameOver():boolean{
+        if(this.history.length > 0){
+            const lastResult = this.history[this.history.length - 1].result;
+            if(lastResult === Result.CORRECT){
+                return true;
+            }
+        }
+        return false;
+    }
+    
 }
 
 

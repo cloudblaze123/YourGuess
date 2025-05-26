@@ -4,5 +4,5 @@
 
 
 <script setup lang="ts">
-import '@/game/main-game-environment'
+// import '@/game/main-game-environment'
 </script>
