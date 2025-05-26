@@ -72,10 +72,13 @@ function refreshChart() {
 
     const game = props.gameInstance
 
+    
+    const xAxisData = data.map(item => item.x)
+    const rightSpaceData = [1,2,3,4,5].map(item => item + xAxisData.length)
+    xAxisData.push(...rightSpaceData)
     let xAxis = [
         {
-            min: 0,
-            max: data.length + 2,
+            data: xAxisData
         }
     ]
     let yAxis = [
@@ -96,11 +99,11 @@ function refreshChart() {
 
     if (chartInstance) {
         chartInstance.setOption({
-            yAxis: yAxis,
             xAxis: xAxis,
+            yAxis: yAxis,
             series: [
                 {
-                    data: data.map(item => [item.x, item.y])
+                    data: data.map(item => item.y),
                 }
             ]
         });
@@ -135,23 +138,24 @@ function initChart() {
         xAxis: [
             {
                 name: '次数',
-                type: 'value',
-                // interval: 0, // 显示所有刻度标签
-                minInterval: 1, // 最小间隔
-                maxInterval: 100, // 最大间隔
-                splitNumber: 10,
-                // axisTick: {
-                //     show: false  // 不显示刻度线
-                // },
+                type: 'category',
+                data: data.map(item => item.x),
                 axisLabel: {
                     show: true,
                     formatter: '{value}'
-                }
+                },
+                axisTick: {
+                    alignWithLabel: true,
+                },
+                splitLine: {
+                    show: false,
+                },
             }
         ],
         yAxis: [
             {
                 type: 'value',
+                minInterval: 1, // 最小间隔为整数
                 axisPointer: {
                     show: true,
                     type: 'line',
@@ -162,13 +166,15 @@ function initChart() {
                         }
                     }
                 },
+                splitLine: {
+                    show: false,
+                },
             }
         ],
         series: [
             {
-                name: 'Direct',
+                name: 'Guess',
                 type: 'bar',
-                barWidth: '10%',
                 label: {
                     show: true,
                     position: 'top',
@@ -176,13 +182,35 @@ function initChart() {
                         return `${data[params.dataIndex].label}`
                     }
                 },
-                data: data.map(item => [item.x, item.y])
+                itemStyle: {
+                    color: (params: any) => {
+                        const result = results[params.dataIndex]
+                        if (result === Result.CORRECT) {
+                            return '#33d07c' // 绿色
+                        } else if (result === Result.TOO_SMALL) {
+                            return '#d03737' // 红色
+                        } else if (result === Result.TOO_BIG) {
+                            return '#2b80d0' //蓝色
+                        } else {
+                            return 'black' //不应该有这个颜色的情况，有则数据有误
+                        }
+                    },
+                    borderRadius: [3, 3, 0, 0],
+                },
+                barWidth: '95%',
+
+                animationDuration: 500,
             },
         ],
         dataZoom: [
             {
                 type: 'inside',
+                xAxisIndex: 0,
+            },
+            {
+                type: 'slider',
                 yAxisIndex: 0,
+                filterMode: 'none',
             }
         ],
     };
