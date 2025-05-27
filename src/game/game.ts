@@ -31,6 +31,9 @@ export class Game{
     min:number = 1;
     max:number = 100;
 
+    // 最大猜数次数，达到此次数后游戏结束
+    maxGuessCount:number = 10;
+
     history:{ guess:number, result:Result }[] = [];
 
     onUpdate: () => void = () => {};
@@ -74,6 +77,11 @@ export class Game{
 
 
     isGameOver():boolean{
+        if(this.history.length >= this.maxGuessCount){
+            console.log("max guess count reached");
+            return true;
+        }
+
         if(this.history.length > 0){
             const lastResult = this.history[this.history.length - 1].result;
             if(lastResult === Result.CORRECT){
@@ -82,7 +90,7 @@ export class Game{
         }
         return false;
     }
-    
+
 }
 
 
