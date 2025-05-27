@@ -3,6 +3,12 @@ import { GuessAction, ReverseResultAction } from "./action";
 import { Game } from "./game";
 
 
+function sleep(duration: number): Promise<void> {
+    return new Promise(resolve => setTimeout(resolve, duration));
+}
+
+
+
 class GameEnvironment {
     game: Game;
     attacker: Agent;
@@ -28,6 +34,7 @@ class GameEnvironment {
 
 
     async loop() {
+        await sleep(1000)
         while (true) {
             if (this.game.isGameOver()) {
                 console.log("Game over");
@@ -53,6 +60,8 @@ class GameEnvironment {
             if (this.lastAgent === this.defender) {
                 this.game.next()
             }
+
+            await sleep(200);
         }
     }
 

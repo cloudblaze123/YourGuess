@@ -199,7 +199,7 @@ function initChart() {
                 },
                 barWidth: '95%',
 
-                animationDuration: 500,
+                animationDuration: 50,
             },
         ],
         dataZoom: [

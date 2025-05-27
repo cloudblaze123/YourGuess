@@ -43,11 +43,12 @@ const resultHistory = ref<Result[]>([])
 
 import { GameEnvironment } from '@/game/game-environment';
 import { HumanAgent } from '@/game/agent/human-agent';
+import { RandomAgent } from '@/game/agent/random-agent'
 import { HonestAgent } from '@/game/agent/honest-agent';
 
 
 
-const attacker = new HumanAgent();
+const attacker = new RandomAgent();
 const defender = new HonestAgent();
 const gameEnv = new GameEnvironment(game, attacker, defender);
 
@@ -67,7 +68,7 @@ resetGame()
 
 
 function handleGuess(guessNumber: number) {
-    attacker.guess(guessNumber)
+    // attacker.guess(guessNumber)
 }
 
 
