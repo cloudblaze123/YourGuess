@@ -32,7 +32,7 @@ export class Game{
     max:number = 100;
 
     // 最大猜数次数，达到此次数后游戏结束
-    maxGuessCount:number = 10;
+    maxGuessCount:number = 500;
 
     history:{ guess:number, result:Result }[] = [];
 
