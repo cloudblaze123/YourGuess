@@ -44,11 +44,12 @@ const resultHistory = ref<Result[]>([])
 import { GameEnvironment } from '@/game/game-environment';
 import { HumanAgent } from '@/game/agent/human-agent';
 import { RandomAgent } from '@/game/agent/random-agent'
+import { SkipGuessedRandomAgent } from '@/game/agent/skip-guessed-random-agent';
 import { HonestAgent } from '@/game/agent/honest-agent';
 
 
 
-const attacker = new RandomAgent();
+const attacker = new SkipGuessedRandomAgent();
 const defender = new HonestAgent();
 const gameEnv = new GameEnvironment(game, attacker, defender);
 

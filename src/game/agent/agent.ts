@@ -6,6 +6,10 @@ import { Action, NoneAction } from "@/game/action";
 class Agent {
     // 以下 public 属性和方法可供外部设置和调用
 
+    // 游戏开始前触发
+    // 可在这个方法中初始化或还原 agent 状态
+    public OnGameStarting: () => void = () => { };
+
     // 当轮到 agent 进行行动时触发
     public onUpdate: () => void = () => { };
     

@@ -27,9 +27,16 @@ class GameEnvironment {
     start() {
         this.lastAgent = null;
 
+        this._initAgents();
         this.game.initGame();
         console.log(`Target number is ${this.game.target}`);
         this.loop();
+    }
+
+
+    _initAgents() {
+        this.attacker.OnGameStarting()
+        this.defender.OnGameStarting()
     }
 
 
@@ -61,7 +68,7 @@ class GameEnvironment {
                 this.game.next()
             }
 
-            await sleep(200);
+            await sleep(20);
         }
     }
 
