@@ -25,7 +25,7 @@ class Agent {
     // 以下部分仅供游戏环境访问，外部不可访问
     action: Action = new NoneAction();
     
-    private _next: () => void = () => { };
+    _next: () => void = () => { };
     
     update() {
         return new Promise<void>(resolve => {
