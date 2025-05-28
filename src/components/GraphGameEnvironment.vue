@@ -16,7 +16,7 @@ import { ref } from 'vue'
 import GuessChartInput from '@/components/GuessChartInput.vue'
 
 import { Result } from '@/game/game'
-import { game } from '@/game/gameProvider'
+import { Game } from '@/game/game'
 
 import { Agent } from '@/game/agent/agent'
 
@@ -31,6 +31,11 @@ const props = defineProps({
         required: true
     }
 })
+
+
+
+
+const game = new Game()
 
 
 const target = ref<number>(game.target)
