@@ -65,9 +65,6 @@ game.onUpdate = () => {
 }
 
 
-resetGame()
-
-
 function resetGame() {
     const attacker = props.attacker
     const defender = props.defender

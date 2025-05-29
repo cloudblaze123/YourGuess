@@ -65,9 +65,6 @@ game.onUpdate = () => {
 }
 
 
-resetGame()
-
-
 function handleGuess(guessNumber: number) {
     // attacker.guess(guessNumber)
 }
