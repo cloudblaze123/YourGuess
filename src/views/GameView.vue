@@ -48,8 +48,7 @@ import { SkipGuessedRandomAgent } from '@/game/agent/skip-guessed-random-agent';
 import { HonestAgent } from '@/game/agent/honest-agent';
 
 
-
-const attacker = new SkipGuessedRandomAgent();
+const attacker = new HumanAgent();
 const defender = new HonestAgent();
 const gameEnv = new GameEnvironment(game, attacker, defender);
 
@@ -66,7 +65,7 @@ game.onUpdate = () => {
 
 
 function handleGuess(guessNumber: number) {
-    // attacker.guess(guessNumber)
+    attacker.guess(guessNumber)
 }
 
 

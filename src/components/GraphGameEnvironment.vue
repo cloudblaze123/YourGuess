@@ -4,7 +4,7 @@
         <button class="btn btn-primary mb-4" @click="resetGame">重置游戏</button>
         <div>target: {{ target }}</div>
         
-        <GuessChartInput :guesses="guessHistory" :results="resultHistory" :game-instance="game" />
+        <GuessChart :guesses="guessHistory" :results="resultHistory" :game-instance="game" />
 
     </div>
 </template>
@@ -13,7 +13,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 
-import GuessChartInput from '@/components/GuessChartInput.vue'
+import GuessChart from '@/components/GuessChart.vue'
 
 import { Result } from '@/game/game'
 import { Game } from '@/game/game'

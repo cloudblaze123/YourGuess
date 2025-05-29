@@ -5,7 +5,7 @@ import { getResultMessage } from '@/game/game';
 
 
 
-function generateChartOption(max: number, min: number) {
+function generateChartOption(max: number, min: number, animation: boolean = false) {
     const option:EChartsOption = {
         grid: {
             left: '3%',
@@ -95,7 +95,8 @@ function generateChartOption(max: number, min: number) {
                 filterMode: 'none',
             }
         ],
-        animation: false,
+        animation: animation,
+        animationDuration: 200,
     };
     
     return option;

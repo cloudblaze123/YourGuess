@@ -55,25 +55,8 @@ function refreshChart() {
 
 function initChart() {
     chartInstance = echarts.init(chartRef.value);
-    const option = generateChartOption(props.gameInstance.max, props.gameInstance.min, true);
+    const option = generateChartOption(props.gameInstance.max, props.gameInstance.min);
     option && chartInstance.setOption(option);
-
-    chartInstance.getZr().on('click', function (params: MouseEvent) {
-        // 获取 y 轴的值
-        const offsetY = params.offsetY;
-        let yAxisValue: number = chartInstance?.convertFromPixel(
-            { yAxisIndex: 0 },
-            offsetY
-        ) as number
-        // 对 y 四舍五入取整
-        yAxisValue = Math.floor(yAxisValue + 0.5)
-
-        console.log(yAxisValue)
-
-        emit('guessed', yAxisValue)
-
-        refreshChart()
-    });
     refreshChart();
 }
 
