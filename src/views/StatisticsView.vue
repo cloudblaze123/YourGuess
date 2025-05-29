@@ -19,6 +19,7 @@ import { Agent } from '@/game/agent/agent';
 import { RandomAgent } from '@/game/agent/random-agent';
 import { SkipGuessedRandomAgent } from '@/game/agent/skip-guessed-random-agent';
 import { GradualIncreaseAgent } from '@/game/agent/gradual-increase-agent';
+import { GradualDecreaseAgent } from '@/game/agent/gradual-decrease-agent';
 import { HonestAgent } from '@/game/agent/honest-agent';
 
 
@@ -26,6 +27,7 @@ const items = ref<Record<string, Agent>>({
     RandomAgent: new RandomAgent(),
     SkipGuessedRandomAgent: new SkipGuessedRandomAgent(),
     GradualIncreaseAgent: new GradualIncreaseAgent(),
+    GradualDecreaseAgent: new GradualDecreaseAgent(),
 })
 const selectedOption = ref('RandomAgent')
 
