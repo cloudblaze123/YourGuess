@@ -82,12 +82,6 @@ function generateChartOption(max: number, min: number) {
                     borderRadius: [3, 3, 0, 0],
                 },
                 barWidth: '95%',
-                
-                animationDelay: (idx) => {
-                    return idx * 100;
-                },
-                
-                animationDuration: 50,
             },
         ],
         dataZoom: [
@@ -101,6 +95,7 @@ function generateChartOption(max: number, min: number) {
                 filterMode: 'none',
             }
         ],
+        animation: false,
     };
     
     return option;
