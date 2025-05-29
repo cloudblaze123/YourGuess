@@ -2,10 +2,8 @@ import { Agent } from "./agent/agent";
 import { GuessAction, ReverseResultAction } from "./action";
 import { Game } from "./game";
 
+import { sleep } from "@/utils/common";
 
-function sleep(duration: number): Promise<void> {
-    return new Promise(resolve => setTimeout(resolve, duration));
-}
 
 
 
