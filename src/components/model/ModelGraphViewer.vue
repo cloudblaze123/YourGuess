@@ -21,6 +21,8 @@ const weightNet2: WeightNet = [
     [9, 10, 11, 12]
 ]
 
+const weightNets = [weightNet1, weightNet2]
+
 
 
 
@@ -105,6 +107,8 @@ class Link{
 }
 
 
+
+
 const nodesData: any[] = []
 const linksData: any[] = []
 
@@ -129,20 +133,26 @@ function prepareWeightNetData(weightNet: WeightNet, layer: number) {
         }
     }
 
-    // 传入准备好的数据
-    const nodes = [...inputNodes,...outputNodes]
-    for(const node of nodes.map(node => node.toJSON())){
-        if(nodesData.find(item => item.name === node.name) === undefined){
-            nodesData.push(node)
-        }
+    return {
+        inputNodes: inputNodes.map(node => node.toJSON()),
+        outputNodes: outputNodes.map(node => node.toJSON()),
+        links: links.map(link => link.toJSON()),
     }
-    linksData.push(...links.map(link => link.toJSON()))
 }
 
 
 function prepareData() {
-    prepareWeightNetData(weightNet1, 0)
-    prepareWeightNetData(weightNet2, 1)
+    nodesData.length = 0
+    linksData.length = 0
+
+    for (let i = 0; i < weightNets.length; i++) {
+        const weightNet = weightNets[i]
+
+        const { inputNodes, outputNodes, links } = prepareWeightNetData(weightNet, i)
+        if (i === 0) { nodesData.push(...inputNodes) }
+        nodesData.push(...outputNodes)
+        linksData.push(...links)
+    }
 }
 
 prepareData()
