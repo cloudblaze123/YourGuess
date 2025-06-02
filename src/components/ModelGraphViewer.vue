@@ -6,8 +6,10 @@
 import { onMounted, onUnmounted, ref } from 'vue';
 import * as echarts from 'echarts';
 
+import { type Weight } from '@/model/type';
 
-const weights = ref([
+
+const weights = ref<Weight>([
     [1, 2, 3],
     [4, 5, 6],
     [7, 8, 9],
