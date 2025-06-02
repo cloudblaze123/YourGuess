@@ -25,7 +25,7 @@ import { GameRecord } from '@/game/game-record';
 
 const game = new Game();
 const gameEnv = new GameEnvironment(game, new RandomAgent(), new HonestAgent());
-gameEnv.start();
+// gameEnv.start();
 const record = ref(GameRecord.readFromGame(game));
 
 

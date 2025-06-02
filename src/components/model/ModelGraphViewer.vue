@@ -9,11 +9,16 @@ import * as echarts from 'echarts';
 import { type WeightNet } from '@/model/type';
 
 
-const weightNet: WeightNet = [
+const weightNet1: WeightNet = [
     [1, 2, 3],
     [4, 5, 6],
     [7, 8, 9],
     [10, 11, 12]
+]
+const weightNet2: WeightNet = [
+    [1, 2, 3, 4],
+    [5, 6, 7, 8],
+    [9, 10, 11, 12]
 ]
 
 
@@ -104,16 +109,16 @@ const nodesData: any[] = []
 const linksData: any[] = []
 
 
-function prepareData() {
+function prepareWeightNetData(weightNet: WeightNet, layer: number) {
     const rows = weightNet.length
     const cols = weightNet[0].length
 
     // 准备输入和输出节点的数据
     const inputNodes = Array.from({ length: cols }, (_, i) => {
-        return Node.createByWeightNet(weightNet, 0, i)
+        return Node.createByWeightNet(weightNet, layer, i)
     })
     const outputNodes = Array.from({ length: rows }, (_, i) => {
-        return Node.createByWeightNet(weightNet, 1, i)
+        return Node.createByWeightNet(weightNet, layer+1, i)
     })
 
     // 准备链接的数据
@@ -124,11 +129,22 @@ function prepareData() {
         }
     }
 
-    // 传入准备号的数据
+    // 传入准备好的数据
     const nodes = [...inputNodes,...outputNodes]
-    nodesData.push(...nodes.map(node => node.toJSON()))
+    for(const node of nodes.map(node => node.toJSON())){
+        if(nodesData.find(item => item.name === node.name) === undefined){
+            nodesData.push(node)
+        }
+    }
     linksData.push(...links.map(link => link.toJSON()))
 }
+
+
+function prepareData() {
+    prepareWeightNetData(weightNet1, 0)
+    prepareWeightNetData(weightNet2, 1)
+}
+
 prepareData()
 
 
