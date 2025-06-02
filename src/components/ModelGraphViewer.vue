@@ -6,78 +6,130 @@
 import { onMounted, onUnmounted, ref } from 'vue';
 import * as echarts from 'echarts';
 
-import { type Weight } from '@/model/type';
+import { type WeightNet } from '@/model/type';
 
 
-const weights = ref<Weight>([
+const weightNet: WeightNet = [
     [1, 2, 3],
     [4, 5, 6],
     [7, 8, 9],
     [10, 11, 12]
-])
+]
 
 
-const data: Object[] = []
-const links: any[] = []
+
+
+class Node{
+    weightNet: WeightNet | null = null
+    layer: number = 0
+    index: number = 0
+
+    name: string = ''
+    x: number = 0
+    y: number = 0
+
+    static createByWeightNet(weightNet: WeightNet, layer: number, index: number) {
+        const node = new Node()
+
+        node.weightNet = weightNet
+        node.layer = layer
+        node.index = index
+
+        node.name = `Layer ${layer} Node ${index}`
+        node.x = 100 + layer * 150
+        node.y = index * 100 + 100
+
+        return node
+    }
+
+    toJSON() {
+        return {
+            name: this.name,
+            x: this.x,
+            y: this.y
+        }
+    }
+}
+
+
+class Link{
+    from: Node | null = null
+    to: Node | null = null
+    value: number = -1
+
+    static createByNodes(from: Node, to: Node) {
+        const link = new Link()
+
+        link.from = from
+        link.to = to
+
+        const weightNet = from.weightNet!
+        link.value = weightNet[to.index][from.index]
+        
+        return link
+    }
+
+    _getRelativeWidth() {
+        const weightNet = this.from!.weightNet!
+
+        const maxWeight = Math.max(...weightNet.flat())
+        const minWeight = Math.min(...weightNet.flat())
+
+        let weightRange = maxWeight - minWeight
+        if (weightRange === 0) {
+            weightRange = 1
+        }
+
+        return (this.value / weightRange) * 5 + 1
+    }
+
+
+    toJSON() {
+        return {
+            source: this.from!.name,
+            target: this.to!.name,
+            label: {
+                show: true,
+                formatter: `${this.value}`
+            },
+            lineStyle: {
+                width: this._getRelativeWidth()
+            },
+        }
+    }
+}
+
+
+const nodesData: any[] = []
+const linksData: any[] = []
 
 
 function prepareData() {
-    const inputNodes = new Array(weights.value[0].length)
-    const outputNodes = new Array(weights.value.length)
-    const inputLinks: Array<object[]> = []
+    const rows = weightNet.length
+    const cols = weightNet[0].length
 
-    for (let i = 0; i < outputNodes.length; i++) {
-        inputLinks[i] = new Array(inputNodes.length)
-    }
+    // 准备输入和输出节点的数据
+    const inputNodes = Array.from({ length: cols }, (_, i) => {
+        return Node.createByWeightNet(weightNet, 0, i)
+    })
+    const outputNodes = Array.from({ length: rows }, (_, i) => {
+        return Node.createByWeightNet(weightNet, 1, i)
+    })
 
-    for (let i = 0; i < inputNodes.length; i++) {
-        inputNodes[i] = {
-            name: `Input ${i}`,
-            x: 100,
-            y: i * 100 + 100
-        }
-    }
-    for (let i = 0; i < outputNodes.length; i++) {
-        outputNodes[i] = {
-            name: `Output ${i}`,
-            x: 300,
-            y: i * 100 + 100
-        }
-    }
-
-
-    const maxWeight = Math.max(...weights.value.flat())
-    const minWeight = Math.min(...weights.value.flat())
-    let weightRange = maxWeight - minWeight
-    if (weightRange === 0) {
-        weightRange = 1
-    }
-
+    // 准备链接的数据
+    const links:Link[] = []
     for (let i = 0; i < inputNodes.length; i++) {
         for (let j = 0; j < outputNodes.length; j++) {
-            inputLinks[j][i] = {
-                source: `Input ${i}`,
-                target: `Output ${j}`,
-                label: {
-                    show: true,
-                    formatter: `${weights.value[j][i]}`
-                },
-                lineStyle: {
-                    width: weights.value[j][i] / weightRange * 5 + 1,
-                }
-            }
+            links.push(Link.createByNodes(inputNodes[i], outputNodes[j]))
         }
     }
 
-    data.push(...inputNodes, ...outputNodes)
-    for (let i = 0; i < inputLinks.length; i++) {
-        links.push(...inputLinks[i])
-    }
+    // 传入准备号的数据
+    const nodes = [...inputNodes,...outputNodes]
+    nodesData.push(...nodes.map(node => node.toJSON()))
+    linksData.push(...links.map(link => link.toJSON()))
 }
 prepareData()
-
-// console.log(data)
-// console.log(links)
 
 
 
@@ -113,8 +165,8 @@ function initChart() {
                 edgeLabel: {
                     fontSize: 20
                 },
-                data: data,
-                links: links,
+                data: nodesData,
+                links: linksData,
                 lineStyle: {
                     opacity: 0.9,
                     width: 2,
@@ -133,7 +185,7 @@ function initChart() {
         console.log(params.data);
         
         const name = params.data.name;
-        for(const link of links){
+        for(const link of linksData){
             if(link.source !== name && link.target !== name){
                 link.lineStyle.opacity = 0.1;
             } else {
@@ -143,7 +195,7 @@ function initChart() {
 
         chartInstance?.setOption({
             series: {
-                links: links    
+                links: linksData    
             }
         })
     });
