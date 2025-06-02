@@ -14,10 +14,10 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 
-import GraphGameEnvironment from '@/components/GraphGameEnvironment.vue';
+import GraphGameEnvironment from '@/components/static/GraphGameEnvironment.vue';
 
 
-import GameRecordPlayer from '@/components/GameRecordPlayer.vue';
+import GameRecordPlayer from '@/components/static/GameRecordPlayer.vue';
 
 import { Game } from '@/game/game';
 import { GameEnvironment } from '@/game/game-environment';

@@ -13,7 +13,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 
-import GuessChart from '@/components/GuessChart.vue'
+import GuessChart from '@/components/static/GuessChart.vue'
 
 import { Result } from '@/game/game'
 import { Game } from '@/game/game'

@@ -8,9 +8,9 @@
 
 
 <script setup lang="ts">
-import TestModel from '@/components/TestModel.vue'
+import TestModel from '@/components/test/TestModel.vue'
 import HelloEcharts from '@/components/HelloEcharts.vue'
 
-import ModelViewer from '@/components/ModelViewer.vue'
-import ModelGraphViewer from '@/components/ModelGraphViewer.vue'
+import ModelViewer from '@/components/model/ModelViewer.vue'
+import ModelGraphViewer from '@/components/model/ModelGraphViewer.vue'
 </script>
