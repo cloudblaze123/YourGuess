@@ -1,5 +1,6 @@
 <template>
     <div ref="chartRef" style="width: 600px; height: 400px;"></div>
+    <button @click="refreshChart" class="btn btn-primary">刷新图表</button>
 </template>
   
 <script setup lang="ts">
@@ -226,6 +227,26 @@ function initChart() {
         })
     });
 }
+
+
+function refreshChart(){
+    weightNets[0] = [
+        [10, 11],
+        [1, 2],
+        [4, 5],
+        [7, 8],
+    ]
+    
+    prepareData()
+    chartInstance?.setOption({
+        series: {
+            data: nodesData,
+            links: linksData
+        }
+    })
+}
+
+
 
 // 在组件挂载后初始化图表
 onMounted(() => {
