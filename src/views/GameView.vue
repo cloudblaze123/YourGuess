@@ -16,11 +16,11 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 
-import GuessChartInput from '@/components/GuessChartInput.vue'
+import GuessChartInput from '@/components/game/GuessChartInput.vue'
 
-import GuessHistory from '@/components/GuessHistory.vue'
-import GuessInput from '@/components/GuessInput.vue'
-import GameSettingView from '@/components/GameSetting.vue'
+import GuessHistory from '@/components/game/GuessHistory.vue'
+import GuessInput from '@/components/game/GuessInput.vue'
+import GameSettingView from '@/components/game/GameSetting.vue'
 
 import { Result } from '@/game/game'
 import { game } from '@/game/gameProvider'

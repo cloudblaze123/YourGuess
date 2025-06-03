@@ -7,5 +7,5 @@
 
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router'
-import TemporaryTest from './components/TemporaryTest.vue';
+import TemporaryTest from '@/components/test/TemporaryTest.vue';
 </script>

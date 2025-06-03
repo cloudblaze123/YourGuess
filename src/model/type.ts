@@ -1,9 +1,9 @@
-type Weight = Array<Array<number>>
+type WeightNet = Array<Array<number>>
 
 
 type Network = {
-  weights: Weight[]
+  weightNet: WeightNet[]
 }
 
 
-export type { Weight, Network }
+export type { WeightNet, Network }
