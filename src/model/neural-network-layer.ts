@@ -55,6 +55,23 @@ class NeuralNetworkLayer {
         this.weights = add(this.weights, deltaWeightsScaled);
         this.bias = add(this.bias, dotMultiply(gradientOutputScaled, 1));
     }
+
+    toJSON(): object {
+        return {
+            inputNodes: this.inputNodes,
+            outputNodes: this.outputNodes,
+            learningRate: this.learningRate,
+            weights: this.weights.toArray(),
+            bias: this.bias.toArray()
+        };
+    }
+
+    static fromJSON(json: any): NeuralNetworkLayer {
+        const layer = new NeuralNetworkLayer(json.inputNodes, json.outputNodes, json.learningRate);
+        layer.weights = matrix(json.weights);
+        layer.bias = matrix(json.bias);
+        return layer;
+    }
 }
 
 

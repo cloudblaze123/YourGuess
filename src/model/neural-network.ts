@@ -7,7 +7,7 @@ import { NeuralNetworkLayer } from './neural-network-layer';
 class NeuralNetwork {
     layers: NeuralNetworkLayer[] = [];
 
-    constructor(networkFormat: number[], learningRate: number = 0.1) {
+    constructor(networkFormat: number[] = [], learningRate: number = 0.1) {
         for (let i = 0; i < networkFormat.length - 1; i++) {
             const layer = new NeuralNetworkLayer(networkFormat[i], networkFormat[i + 1], learningRate);
             this.layers.push(layer);
@@ -72,6 +72,21 @@ class NeuralNetwork {
         // 返回经反向传播后的误差值
         const errorsBackward = layer.backward(errorsNext);
         return errorsBackward;
+    }
+
+
+    toJSON(): any {
+        return {
+            layers: this.layers.map(layer => layer.toJSON())
+        };
+    }
+
+    static fromJSON(json: any): NeuralNetwork {
+        const network = new NeuralNetwork();
+        network.layers = json.layers.map((layerJSON: any) => {
+            return NeuralNetworkLayer.fromJSON(layerJSON);
+        });
+        return network;
     }
 }
 

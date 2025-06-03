@@ -19,6 +19,20 @@
         <button @click="forward" class="btn btn-primary">前向传播</button>
         <div>前向传播结果：{{ forwardResults }}</div>
     </div>
+
+    <div class="flex flex-col mt-16">
+        <div class="flex flex-col">
+            <div>加载模型：</div>
+            <textarea v-model="model" placeholder="要加载的模型的JSON数据"></textarea>
+            <button @click="loadModel" class="btn btn-primary">加载模型</button>
+        </div>
+
+        <div class="flex flex-col mt-8">
+            <div>导出模型：</div>
+            <button @click="exportModel" class="btn btn-primary">导出当前模型</button>
+            <textarea v-model="currentModel" placeholder="当前模型的JSON数据" readonly disabled></textarea>
+        </div>
+    </div>
 </template>
 
 
@@ -39,7 +53,7 @@ const forwardResults = ref('')
 import { NeuralNetwork } from '@/model/neural-network'
 
 // 创建神经网络实例
-const nn = new NeuralNetwork([3, 4, 2]);
+let nn = new NeuralNetwork([3, 4, 2]);
 
 
 function trainModel() {
@@ -82,4 +96,23 @@ function convertNNToWeightNets(nn: NeuralNetwork): WeightNet[] {
     }
     return weightNets;
 }
+
+
+
+
+const model = ref('')
+const currentModel = ref('')
+
+
+function loadModel() {
+    const json = JSON.parse(model.value);
+    nn = NeuralNetwork.fromJSON(json);
+    weightNets.value = convertNNToWeightNets(nn);
+}
+
+function exportModel() {
+    const json = JSON.stringify(nn.toJSON());
+    currentModel.value = json;
+}
+
 </script>
