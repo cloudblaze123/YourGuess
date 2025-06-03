@@ -9,20 +9,14 @@ import * as echarts from 'echarts';
 
 import { type WeightNet } from '@/model/type';
 
+const props = defineProps({
+    weightNets: {
+        type: Array<WeightNet>,
+        required: true
+    }
+});
 
-const weightNet1: WeightNet = [
-    [1, 2, 3],
-    [4, 5, 6],
-    [7, 8, 9],
-    [10, 11, 12]
-]
-const weightNet2: WeightNet = [
-    [1, 2, 3, 4],
-    [5, 6, 7, 8],
-    [9, 10, 11, 12]
-]
-
-const weightNets = [weightNet1, weightNet2]
+const weightNets = props.weightNets;
 
 
 
