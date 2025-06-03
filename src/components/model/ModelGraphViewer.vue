@@ -95,7 +95,8 @@ class Link{
                 formatter: `${this.value.toFixed(2)}`
             },
             lineStyle: {
-                width: this._getRelativeWidth()
+                width: this._getRelativeWidth(),
+                color: this.value > 0? '#5ab1ef' : '#f46542' // 正数为蓝色，负数为红色
             },
         }
     }
