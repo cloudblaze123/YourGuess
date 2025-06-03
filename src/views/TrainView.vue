@@ -28,7 +28,7 @@ const inputsNumbers = ref('0.9 0.1 0.8')
 const targetNumbers = ref('1.0 0.0')
 const trainTimes = ref(100)
 
-const forwardInput = ref('0.9 0.1  0.8')
+const forwardInput = ref('0.9 0.1 0.8')
 const forwardResults = ref('')
 
 
@@ -53,7 +53,7 @@ function trainModel() {
 
 
 function forward() {
-    const input = [0.9, 0.1, 0.8];
+    const input = forwardInput.value.split(' ').map(Number);
     const output = nn.forward(input);
     forwardResults.value = output.map((v) => v.toFixed(3)).join('   ');
 }
