@@ -4,6 +4,14 @@
     <HelloEcharts />
     <ModelViewer />
     <ModelGraphViewer :weight-nets="weightNets"/>
+
+    <div class="flex flex-col">
+        <div>创建模型</div>
+        <div>用单个空格分隔的每层节点数，形如：2 4 3 1</div>
+        <input type="text" v-model="networkFormatStr" placeholder="用单个空格分隔的每层节点数，形如：2 4 3 1" />
+        <button @click="createModel" class="btn btn-primary">创建模型</button>
+        <textarea v-model="modelCreated" rows="10" disabled></textarea>
+    </div>
 </template>
 
 
@@ -30,4 +38,25 @@ const weightNet2: WeightNet = [
 ]
 
 const weightNets = [weightNet1, weightNet2]
+
+
+
+
+import { ref } from 'vue'
+import { NeuralNetwork } from '@/model/neural-network';
+const networkFormatStr = ref('2 4 3 1')
+const modelCreated = ref('')
+
+function createModel() {
+    const networkStr = networkFormatStr.value.trim()
+    if (networkStr === '') {
+        return
+    }
+    const networkStrArr = networkStr.split(' ')
+    const networkFormat = networkStrArr.map(str => parseInt(str))
+    const nn = new NeuralNetwork(networkFormat)
+    const modelStr = JSON.stringify(nn.toJSON())
+    modelCreated.value = modelStr
+}
+
 </script>

@@ -4,9 +4,9 @@
     <ModelGraphViewer :weightNets="weightNets" />
 
     <div class="flex flex-col mt-8">
-        <div>请输入【3】个用单个空格分隔的【输入值】</div>
+        <div>请输入用单个空格分隔的【输入值】（偏置节点无需输入）</div>
         <input type="text" v-model="inputsNumbers" placeholder="用空格分隔的输入值形如 0.9 0.1 0.8">
-        <div>请输入【2】个用单个空格分隔的【目标值】（1到0之间）</div>
+        <div>请输入用单个空格分隔的【目标值】（1到0之间）</div>
         <input type="text" v-model="targetNumbers" placeholder="用空格分隔的目标值 形如 1 0">
         <div>训练次数</div>
         <input type="number" v-model="trainTimes" placeholder="训练次数">
@@ -14,7 +14,7 @@
     </div>
 
     <div class="flex flex-col mt-16">
-        <div>请输入【3】个用单个空格分隔的【输入值】</div>
+        <div>请输入用单个空格分隔的【输入值】（偏置节点无需输入）</div>
         <input type="text" v-model="forwardInput" placeholder="用空格分隔的输入值形如 0.9 0.1 0.8">
         <button @click="forward" class="btn btn-primary">前向传播</button>
         <div>前向传播结果：{{ forwardResults }}</div>
