@@ -52,23 +52,6 @@ class NeuralNetwork {
         const targets = transpose(matrix([targetsArray])); // 列向量 targets
         
         this._train(0, inputs, targets);
-    //     const LayerOutputs: Matrix[] = []; // 每层的输出
-    //     for(let i = 0; i < this.layers.length; i++) {
-    //         const layer = this.layers[i];
-    //         if (i === 0) {
-    //             LayerOutputs.push(layer.forward(inputs));
-    //         } else {
-    //             LayerOutputs.push(layer.forward(LayerOutputs[i-1]));
-    //         }
-    //         console.log(LayerOutputs[i].toArray());
-    //     }
-
-    //     let errors = subtract(targets, LayerOutputs[LayerOutputs.length-1]) as Matrix;
-    //     for (let i = this.layers.length -1; i >= 0 ; i++) {
-    //         const layer = this.layers[i];
-    //         errors = layer.backward(errors);
-    //         layer.train(LayerOutputs[i], errors);
-    //     }
     }
     // 递归训练
     // 训练第 n 层时，需要第 n-1 层的输出作为输入，并将第 n+1 层的误差反向传播作为第 n 层的误差
@@ -91,18 +74,5 @@ class NeuralNetwork {
     }
 }
 
-// 示例数据
-const input = [0.9, 0.1, 0.8];
-const target = [1, 0];
 
-// 创建神经网络实例
-const nn = new NeuralNetwork([3, 4, 2]);
-
-// 训练神经网络
-for (let i = 0; i < 1000; i++) {
-    nn.train(input, target);
-}
-
-// 前向传播测试
-const output = nn.forward(input);
-console.log(output.valueOf());
+export { NeuralNetwork }
