@@ -61,10 +61,11 @@ class NeuralNetwork {
         }
 
         const layer = this.layers[layerIndex];
-        const outputs = layer.forward(inputs);
-
+        
         // 获得来自下一层的反向误差
+        const outputs = layer.forward(inputs);
         const errorsNext = this._train(layerIndex + 1, outputs, targets);
+        
         // 训练当前层
         layer.train(inputs, errorsNext);
         
