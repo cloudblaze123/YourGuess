@@ -1,6 +1,8 @@
 <template>
     <div>训练模型</div>
 
+    <ModelGraphViewer :weightNets="weightNets" />
+
     <div class="flex flex-col mt-8">
         <div>请输入【3】个用单个空格分隔的【输入值】</div>
         <input type="text" v-model="inputsNumbers" placeholder="用空格分隔的输入值形如 0.9 0.1 0.8">
@@ -49,6 +51,8 @@ function trainModel() {
     for (let i = 0; i < trainTimes.value; i++) {
         nn.train(input, target);
     }
+
+    weightNets.value = convertNNToWeightNets(nn);
 }
 
 
@@ -56,5 +60,26 @@ function forward() {
     const input = forwardInput.value.split(' ').map(Number);
     const output = nn.forward(input);
     forwardResults.value = output.map((v) => v.toFixed(3)).join('   ');
+}
+
+
+
+import { concat } from 'mathjs';
+import { type WeightNet } from '@/model/type';
+import ModelGraphViewer from '@/components/model/ModelGraphViewer.vue';
+
+let weightNets = ref(convertNNToWeightNets(nn));
+
+function convertNNToWeightNets(nn: NeuralNetwork): WeightNet[] {
+    const weightNets: WeightNet[] = [];
+    for (let i = 0; i < nn.layers.length; i++) {
+        const layer = nn.layers[i];
+        const weights = layer.weights.toArray() as WeightNet;
+        const bais = layer.bias.toArray() as WeightNet;
+
+        const weightNet = concat(weights, bais, 1) as WeightNet;
+        weightNets.push(weightNet);
+    }
+    return weightNets;
 }
 </script>

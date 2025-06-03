@@ -16,7 +16,7 @@ const props = defineProps({
     }
 });
 
-const weightNets = props.weightNets;
+let weightNets = props.weightNets;
 
 
 
@@ -92,7 +92,7 @@ class Link{
             target: this.to!.name,
             label: {
                 show: true,
-                formatter: `${this.value}`
+                formatter: `${this.value.toFixed(2)}`
             },
             lineStyle: {
                 width: this._getRelativeWidth()
@@ -137,6 +137,7 @@ function prepareWeightNetData(weightNet: WeightNet, layer: number) {
 
 
 function prepareData() {
+    weightNets = props.weightNets
     nodesData.length = 0
     linksData.length = 0
 
@@ -224,13 +225,6 @@ function initChart() {
 
 
 function refreshChart(){
-    weightNets[0] = [
-        [10, 11],
-        [1, 2],
-        [4, 5],
-        [7, 8],
-    ]
-    
     prepareData()
     chartInstance?.setOption({
         series: {
