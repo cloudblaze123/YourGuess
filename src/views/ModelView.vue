@@ -38,9 +38,8 @@ function createModel() {
     const networkStrArr = networkStr.split(' ')
     const networkFormat = networkStrArr.map(str => parseInt(str))
     const nn = new NeuralNetwork(networkFormat)
-    const nnJSON = nn.toJSON()
-    modelStore.addModel('model' + new Date().getTime(), nnJSON)
-    const modelStr = JSON.stringify(nnJSON)
+    modelStore.addModel('model' + new Date().getTime(), nn)
+    const modelStr = JSON.stringify(nn.toJSON())
     modelCreated.value = modelStr
 }
 

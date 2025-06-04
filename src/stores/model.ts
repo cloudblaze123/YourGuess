@@ -1,14 +1,17 @@
 import { defineStore } from 'pinia'
 
+import { NeuralNetwork } from '@/model/neural-network'
+
+
 export const useModelStore = defineStore('model', {
     // state
     state: () => ({
-        models: {} as Record<string, any>,
+        models: {} as Record<string, NeuralNetwork>,
     }),
     
     // actions
     actions: {
-        addModel(name:string, model:any) {
+        addModel(name:string, model:NeuralNetwork) {
             this.models[name] = model
         },
 
