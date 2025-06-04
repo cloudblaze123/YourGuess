@@ -1,6 +1,8 @@
 <template>
-    <div ref="chartRef" style="width: 600px; height: 400px;"></div>
-    <button @click="refreshChart" class="btn btn-primary">刷新图表</button>
+    <div>
+        <div ref="chartRef" style="width: 600px; height: 400px;"></div>
+        <button @click="refreshChart" class="btn btn-primary">刷新图表</button>
+    </div>
 </template>
   
 <script setup lang="ts">

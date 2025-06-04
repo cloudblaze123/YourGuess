@@ -14,6 +14,8 @@
 
         <div class="text-lg">ModelGraphViewer</div>
         <ModelGraphViewer :weight-nets="weightNets" />
+
+        <textarea v-model="modelJsonStr" rows="10" disabled class="w-full"></textarea>
     </div>
 </template>
 
@@ -22,6 +24,16 @@
 import { ref } from 'vue'
 
 import ModelGraphViewer from '@/components/model/ModelGraphViewer.vue'
+
+import { NeuralNetwork } from '@/model/neural-network';
+
+
+defineExpose({
+    setModel,
+});
+
+
+let model: NeuralNetwork | null = null;
 
 
 const weights = ref([
@@ -36,17 +48,33 @@ const weights = ref([
 
 import { type WeightNet } from '@/model/type';
 
-const weightNet1: WeightNet = [
-    [1, 2, 3],
-    [4, 5, 6],
-    [7, 8, 9],
-    [10, 11, 12]
-]
-const weightNet2: WeightNet = [
-    [1, 2, 3, 4],
-    [5, 6, 7, 8],
-    [9, 10, 11, 12]
-]
+import { concat } from 'mathjs';
 
-const weightNets = [weightNet1, weightNet2]
+let weightNets = ref<WeightNet[]>([]);
+
+function convertNNToWeightNets(nn: NeuralNetwork): WeightNet[] {
+    const weightNets: WeightNet[] = [];
+    for (let i = 0; i < nn.layers.length; i++) {
+        const layer = nn.layers[i];
+        const weights = layer.weights.toArray() as WeightNet;
+        const bais = layer.bias.toArray() as WeightNet;
+
+        const weightNet = concat(weights, bais, 1) as WeightNet;
+        weightNets.push(weightNet);
+    }
+    return weightNets;
+}
+
+
+
+
+
+
+const modelJsonStr = ref('')
+
+function setModel(modelArg: NeuralNetwork){
+    model = modelArg
+    weightNets.value = convertNNToWeightNets(model)
+    modelJsonStr.value = JSON.stringify(model.toJSON())
+}
 </script>

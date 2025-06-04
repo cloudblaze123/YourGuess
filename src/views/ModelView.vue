@@ -1,7 +1,7 @@
 <template>
-    <ModelViewer />
+    <ModelViewer ref="modelViewerRef" />
     
-    <ModelList class="mt-8"/>
+    <ModelList @select-model="onSelectModel" class="mt-8"/>
 
     <div class="flex flex-col">
         <div>创建模型</div>
@@ -26,9 +26,21 @@ import { useModelStore } from '@/stores/model';
 const modelStore = useModelStore();
 
 
+const modelViewerRef = ref<any>()
+
+
+
+
+function onSelectModel(modelName: string) {
+    console.log('onSelectModel', modelName)
+    modelViewerRef.value!.setModel(modelStore.getModel(modelName))
+}
+
+
+
+
 import { NeuralNetwork } from '@/model/neural-network';
 const networkFormatStr = ref('2 4 3 1')
-const modelCreated = ref('')
 
 function createModel() {
     const networkStr = networkFormatStr.value.trim()
@@ -36,11 +48,12 @@ function createModel() {
         return
     }
     const networkStrArr = networkStr.split(' ')
+                                    .map(str => str.trim())
+                                    .filter(str => str !== '')
+                                    
     const networkFormat = networkStrArr.map(str => parseInt(str))
     const nn = new NeuralNetwork(networkFormat)
     modelStore.addModel('model' + new Date().getTime(), nn)
-    const modelStr = JSON.stringify(nn.toJSON())
-    modelCreated.value = modelStr
 }
 
 </script>
