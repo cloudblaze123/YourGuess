@@ -65,6 +65,8 @@ function trainModel() {
     for (let i = 0; i < trainTimes.value; i++) {
         nn.train(input, target);
     }
+    
+    updateChart();
 }
 
 
@@ -72,6 +74,11 @@ function forward() {
     const input = forwardInput.value.split(/\s+/).map(Number);
     const output = nn.forward(input);
     forwardResults.value = output.map((v) => v.toFixed(3)).join('   ');
+}
+
+
+function updateChart(){
+    modelGraphViewer.value!.updateChart(nn);
 }
 
 
@@ -87,7 +94,7 @@ const modelGraphViewer = ref<InstanceType<typeof ModelGraphViewer> | null>(null)
 function loadModel() {
     const json = JSON.parse(model.value);
     nn = NeuralNetwork.fromJSON(json);
-    modelGraphViewer.value!.updateChart(nn);
+    updateChart();
 }
 
 function exportModel() {
