@@ -5,6 +5,9 @@
     <ModelViewer />
     <ModelGraphViewer :weight-nets="weightNets"/>
 
+    
+    <ModelList class="mt-8"/>
+
     <div class="flex flex-col">
         <div>创建模型</div>
         <div>用单个空格分隔的每层节点数，形如：2 4 3 1</div>
@@ -21,6 +24,8 @@ import HelloEcharts from '@/components/HelloEcharts.vue'
 
 import ModelViewer from '@/components/model/ModelViewer.vue'
 import ModelGraphViewer from '@/components/model/ModelGraphViewer.vue'
+
+import ModelList from '@/components/model/ModelList.vue'
 
 
 import { type WeightNet } from '@/model/type';
@@ -43,6 +48,10 @@ const weightNets = [weightNet1, weightNet2]
 
 
 import { ref } from 'vue'
+import { useModelStore } from '@/stores/model';
+const modelStore = useModelStore();
+
+
 import { NeuralNetwork } from '@/model/neural-network';
 const networkFormatStr = ref('2 4 3 1')
 const modelCreated = ref('')
@@ -55,7 +64,9 @@ function createModel() {
     const networkStrArr = networkStr.split(' ')
     const networkFormat = networkStrArr.map(str => parseInt(str))
     const nn = new NeuralNetwork(networkFormat)
-    const modelStr = JSON.stringify(nn.toJSON())
+    const nnJSON = nn.toJSON()
+    modelStore.addModel('model' + new Date().getTime(), nnJSON)
+    const modelStr = JSON.stringify(nnJSON)
     modelCreated.value = modelStr
 }
 
