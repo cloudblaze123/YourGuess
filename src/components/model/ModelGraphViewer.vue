@@ -95,7 +95,6 @@ class Node {
                 const node = new Node(layer, layerIndex, i)
                 nodes.push(node)
             }
-            nodes.push(new BiasNode(layer, layerIndex, 0)) // 增加偏置节点
         }
 
         return nodes
