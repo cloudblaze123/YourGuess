@@ -1,7 +1,6 @@
 <template>
     <div>
         <div ref="chartRef" style="width: 600px; height: 400px;"></div>
-        <button @click="refreshChart" class="btn btn-primary">刷新图表</button>
     </div>
 </template>
   
@@ -9,16 +8,40 @@
 import { onMounted, onUnmounted, ref } from 'vue';
 import * as echarts from 'echarts';
 
-import { type WeightNet } from '@/model/type';
+import { NeuralNetwork } from '@/model/neural-network';
 
-const props = defineProps({
-    weightNets: {
-        type: Array<WeightNet>,
-        required: true
-    }
+
+defineExpose({
+    updateChart
 });
 
-let weightNets = props.weightNets;
+
+let network: NeuralNetwork | null = null;
+
+function updateChart(v_network: NeuralNetwork) {
+    network = v_network;
+    refreshChart();
+}
+
+
+import { type WeightNet } from '@/model/type';
+import { concat } from 'mathjs';
+
+let weightNets: WeightNet[] = [];
+
+
+function convertNNToWeightNets(nn: NeuralNetwork): WeightNet[] {
+    const weightNets: WeightNet[] = [];
+    for (let i = 0; i < nn.layers.length; i++) {
+        const layer = nn.layers[i];
+        const weights = layer.weights.toArray() as WeightNet;
+        const bais = layer.bias.toArray() as WeightNet;
+
+        const weightNet = concat(weights, bais, 1) as WeightNet;
+        weightNets.push(weightNet);
+    }
+    return weightNets;
+}
 
 
 
@@ -27,6 +50,7 @@ class Node{
     weightNet: WeightNet | null = null
     layer: number = 0
     index: number = 0
+    toNodes: Node[] = []
 
     name: string = ''
     x: number = 0
@@ -140,7 +164,11 @@ function prepareWeightNetData(weightNet: WeightNet, layer: number) {
 
 
 function prepareData() {
-    weightNets = props.weightNets
+    if (!network) {
+        console.log('network is null')
+        return
+    }
+    weightNets = convertNNToWeightNets(network);
     nodesData.length = 0
     linksData.length = 0
 

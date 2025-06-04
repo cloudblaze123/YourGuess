@@ -1,7 +1,7 @@
 <template>
     <div>训练模型</div>
 
-    <ModelGraphViewer :weightNets="weightNets" />
+    <ModelGraphViewer ref="modelGraphViewer" />
 
     <div class="flex flex-col mt-8">
         <div>请输入用空格分隔的【输入值】（偏置节点无需输入）</div>
@@ -65,8 +65,6 @@ function trainModel() {
     for (let i = 0; i < trainTimes.value; i++) {
         nn.train(input, target);
     }
-
-    weightNets.value = convertNNToWeightNets(nn);
 }
 
 
@@ -78,36 +76,18 @@ function forward() {
 
 
 
-import { concat } from 'mathjs';
-import { type WeightNet } from '@/model/type';
-import ModelGraphViewer from '@/components/model/ModelGraphViewer.vue';
-
-let weightNets = ref(convertNNToWeightNets(nn));
-
-function convertNNToWeightNets(nn: NeuralNetwork): WeightNet[] {
-    const weightNets: WeightNet[] = [];
-    for (let i = 0; i < nn.layers.length; i++) {
-        const layer = nn.layers[i];
-        const weights = layer.weights.toArray() as WeightNet;
-        const bais = layer.bias.toArray() as WeightNet;
-
-        const weightNet = concat(weights, bais, 1) as WeightNet;
-        weightNets.push(weightNet);
-    }
-    return weightNets;
-}
-
-
-
 
 const model = ref('')
 const currentModel = ref('')
 
 
+import ModelGraphViewer from '@/components/model/ModelGraphViewer.vue'
+const modelGraphViewer = ref<InstanceType<typeof ModelGraphViewer> | null>(null)
+
 function loadModel() {
     const json = JSON.parse(model.value);
     nn = NeuralNetwork.fromJSON(json);
-    weightNets.value = convertNNToWeightNets(nn);
+    modelGraphViewer.value!.updateChart(nn);
 }
 
 function exportModel() {

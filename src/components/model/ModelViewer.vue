@@ -13,7 +13,7 @@
         </div>
 
         <div class="text-lg">ModelGraphViewer</div>
-        <ModelGraphViewer :weight-nets="weightNets" />
+        <ModelGraphViewer ref="modelGraphViewer" />
 
         <textarea v-model="modelJsonStr" rows="10" disabled class="w-full"></textarea>
     </div>
@@ -44,37 +44,13 @@ const weights = ref([
 ])
 
 
-
-
-import { type WeightNet } from '@/model/type';
-
-import { concat } from 'mathjs';
-
-let weightNets = ref<WeightNet[]>([]);
-
-function convertNNToWeightNets(nn: NeuralNetwork): WeightNet[] {
-    const weightNets: WeightNet[] = [];
-    for (let i = 0; i < nn.layers.length; i++) {
-        const layer = nn.layers[i];
-        const weights = layer.weights.toArray() as WeightNet;
-        const bais = layer.bias.toArray() as WeightNet;
-
-        const weightNet = concat(weights, bais, 1) as WeightNet;
-        weightNets.push(weightNet);
-    }
-    return weightNets;
-}
-
-
-
-
-
+const modelGraphViewer = ref<InstanceType<typeof ModelGraphViewer> | null>(null)
 
 const modelJsonStr = ref('')
 
 function setModel(modelArg: NeuralNetwork){
     model = modelArg
-    weightNets.value = convertNNToWeightNets(model)
+    modelGraphViewer.value!.updateChart(model)
     modelJsonStr.value = JSON.stringify(model.toJSON())
 }
 </script>
