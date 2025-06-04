@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div ref="chartRef" style="width: 600px; height: 400px;"></div>
+        <div ref="chartRef" style="width: 100%; height: 400px;"></div>
     </div>
 </template>
   
@@ -354,10 +354,17 @@ function refreshChart() {
 }
 
 
+function resizeChart() {
+    if (chartInstance) {
+        chartInstance.resize();
+    }
+}
+
 
 // 在组件挂载后初始化图表
 onMounted(() => {
     initChart();
+    window.addEventListener('resize', resizeChart);
 });
 
 // 在组件销毁前销毁 ECharts 实例
@@ -366,6 +373,7 @@ onUnmounted(() => {
         chartInstance.dispose();
         chartInstance = null;
     }
+    window.removeEventListener('resize', resizeChart);
 });
 </script>
   
