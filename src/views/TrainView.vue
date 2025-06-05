@@ -20,24 +20,17 @@
         <div>前向传播结果：{{ forwardResults }}</div>
     </div>
 
-    <div class="flex flex-col mt-16">
-        <div class="flex flex-col">
-            <div>加载模型：</div>
-            <textarea v-model="model" placeholder="要加载的模型的JSON数据"></textarea>
-            <button @click="loadModel" class="btn btn-primary">加载模型</button>
-        </div>
-
-        <div class="flex flex-col mt-8">
-            <div>导出模型：</div>
-            <button @click="exportModel" class="btn btn-primary">导出当前模型</button>
-            <textarea v-model="currentModel" placeholder="当前模型的JSON数据" readonly disabled></textarea>
-        </div>
+    <div class="text-lg mt-16">
+        <div>当前模型 {{ currentModel }}</div>
+        <ModelList @select-model="onSelectModel" class="mt-8" />
     </div>
 </template>
 
 
 <script setup lang="ts">
 import { ref } from 'vue'
+
+import ModelList from '@/components/model/ModelList.vue'
 
 
 const inputsNumbers = ref('0.9 0.1 0.8')
@@ -65,7 +58,7 @@ function trainModel() {
     for (let i = 0; i < trainTimes.value; i++) {
         nn.train(input, target);
     }
-    
+
     updateChart();
 }
 
@@ -77,29 +70,29 @@ function forward() {
 }
 
 
-function updateChart(){
+function updateChart() {
     modelGraphViewer.value!.updateChart(nn);
 }
 
 
 
 
-const model = ref('')
 const currentModel = ref('')
 
 
 import ModelGraphViewer from '@/components/model/ModelGraphViewer.vue'
 const modelGraphViewer = ref<InstanceType<typeof ModelGraphViewer> | null>(null)
 
-function loadModel() {
-    const json = JSON.parse(model.value);
-    nn = NeuralNetwork.fromJSON(json);
-    updateChart();
-}
 
-function exportModel() {
-    const json = JSON.stringify(nn.toJSON());
-    currentModel.value = json;
+import { useModelStore } from '@/stores/model'
+const modelStore = useModelStore()
+
+
+function onSelectModel(modelName: string) {
+    const model = modelStore.models[modelName];
+    nn = NeuralNetwork.fromJSON(model);
+    currentModel.value = modelName;
+    updateChart();
 }
 
 </script>

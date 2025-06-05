@@ -9,6 +9,14 @@
         <input type="text" v-model="networkFormatStr" placeholder="用单个空格分隔的每层节点数，形如：2 4 3 1" />
         <button @click="createModel" class="btn btn-primary">创建模型</button>
     </div>
+
+    <div class="flex flex-col mt-16">
+        <div class="flex flex-col">
+            <div>加载模型：</div>
+            <textarea v-model="modelJsonStr" placeholder="要加载的模型的JSON数据"></textarea>
+            <button @click="loadModel" class="btn btn-primary">加载模型</button>
+        </div>
+    </div>
 </template>
 
 
@@ -51,4 +59,13 @@ function createModel() {
     modelStore.addModel('model' + new Date().getTime(), nn)
 }
 
+
+
+const modelJsonStr = ref('')
+
+function loadModel() {
+    const json = JSON.parse(modelJsonStr.value);
+    const nn = NeuralNetwork.fromJSON(json);
+    modelStore.addModel('model' + new Date().getTime(), nn)
+}
 </script>
