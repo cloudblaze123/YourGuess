@@ -281,7 +281,7 @@ let chartInstance: echarts.ECharts | null = null;
 type EChartsOption = echarts.EChartsOption;
 
 function initChart() {
-    chartInstance = echarts.init(chartRef.value);
+    chartInstance = echarts.init(chartRef.value, null, { renderer: 'svg' });
     var option: EChartsOption;
 
     option = {
@@ -360,10 +360,12 @@ function resizeChart() {
 }
 
 
+const resizeObserver = new ResizeObserver(resizeChart);
+
 // 在组件挂载后初始化图表
 onMounted(() => {
     initChart();
-    window.addEventListener('resize', resizeChart);
+    resizeObserver.observe(chartRef.value!);
 });
 
 // 在组件销毁前销毁 ECharts 实例
@@ -372,7 +374,7 @@ onUnmounted(() => {
         chartInstance.dispose();
         chartInstance = null;
     }
-    window.removeEventListener('resize', resizeChart);
+    resizeObserver.disconnect();
 });
 </script>
   
