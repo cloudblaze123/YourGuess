@@ -215,15 +215,12 @@ class Link {
         const weightsArr = layers!.map(layer => layer.weights.toArray()) as Array<number[][]>
         const flattenWeights = weightsArr.flat().flat() as number[]
 
-        const maxWeight = Math.max(...flattenWeights)
-        const minWeight = Math.min(...flattenWeights)
-
-        let weightRange = maxWeight - minWeight
-        if (weightRange === 0) {
-            weightRange = 1
+        let absMaxWeight = Math.max(...flattenWeights.map(Math.abs))
+        if (absMaxWeight === 0) {
+            absMaxWeight = 1
         }
 
-        return (this.value / weightRange) * 5 + 1
+        return Math.abs(this.value / absMaxWeight) * 5 + 1
     }
 
 
