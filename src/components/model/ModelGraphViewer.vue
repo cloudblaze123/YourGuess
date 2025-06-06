@@ -136,7 +136,7 @@ class BiasNode extends Node {
     constructor(layer: NeuralNetworkLayer, nodeLayerIndex: number, index: number) {
         super(layer, nodeLayerIndex, index)
         this.type = 'bias'
-        this.name = `${nodeLayerIndex} bias_${index}`
+        this.name = `${nodeLayerIndex} bias`
     }
 
     getWeightTo(to: Node): number {
@@ -153,6 +153,15 @@ class BiasNode extends Node {
         }
         const weight = this.layer!.bias.get([toIndex, 0]) as number
         return weight
+    }
+
+    toJSON() {
+        const json = {
+            itemStyle: {
+                color: '#b07010',
+            }
+        }
+        return Object.assign(super.toJSON(), json)
     }
 }
 
