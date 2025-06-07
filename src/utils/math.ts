@@ -34,11 +34,12 @@ function normalize(num: number, min: number, max: number): number {
         throw new Error("Min must be less than or equal to max.");
     }
     if (num < min || num > max) {
+        console.warn(`Number ${num} is out of range [${min}, ${max}].`);
         throw new Error("Number is out of range.");
     }
 
     const range = Math.abs(max - min);
-    if (range) {
+    if (range === 0) {
         return 0;
     }
     const norm = (num - min) / range;

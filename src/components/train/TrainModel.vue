@@ -18,6 +18,8 @@
         </div>
     </div>
 
+    <div v-if="isTraining">训练进度 {{ trainProgress }} / {{ trainTimesRef }}</div>
+
     <div v-if="showChart">Target {{ targetNumber }}</div>
 
     <GameRecordPlayer ref="gameRecordPlayerRef" />
@@ -57,6 +59,8 @@ const gameRecordPlayerRef = ref<typeof GameRecordPlayer | null>(null);
 
 const showChart = ref(false);
 
+const isTraining = ref(false);
+const trainProgress = ref(-1);
 const targetNumber = ref(-1);
 
 
@@ -67,6 +71,8 @@ import { GameEnvironment } from '@/game/game-environment';
 
 import { GuesserNeuralNetwork } from '@/model/guesser-neural-network';
 import { GameRecord } from '@/game/game-record';
+
+import { sleep } from '@/utils/common';
 async function train() {
     if(!model){
         alert('请先选择模型')
@@ -83,16 +89,31 @@ async function train() {
     const defender = new HonestAgent();
     const environment = new GameEnvironment(game, attacker, defender);
 
+    isTraining.value = true;
     for (let i = 0; i < trainTimes; i++) {
+        await sleep(1) // 需要增加一点延迟，视图才会正常更新，原因未明了
+        
         await environment.start();
-
-        if (showChart.value) {
-            const record = GameRecord.generateFromGame(game);
-            gameRecordPlayerRef.value?.play(record);
-            targetNumber.value = game.target;
+        
+        // 每达到1%的训练进度，更新一次视图
+        if (i % Math.round(trainTimes / 100 + 1) === 0){
+            trainProgress.value = i;
+            
+            if (showChart.value) {
+                const record = GameRecord.generateFromGame(game);
+                gameRecordPlayerRef.value?.play(record);
+                targetNumber.value = game.target;
+            }
         }
 
         guesserNetwork.trainByGame(game);
+    }
+    isTraining.value = false;
+
+    if (showChart.value) {
+        const record = GameRecord.generateFromGame(game);
+        gameRecordPlayerRef.value?.play(record);
+        targetNumber.value = game.target;
     }
 }
 
