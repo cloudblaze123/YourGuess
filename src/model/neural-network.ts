@@ -75,6 +75,18 @@ class NeuralNetwork {
     }
 
 
+    setLearningRate(learningRate: number): void {
+        this.layers.forEach(layer => {
+            layer.learningRate = learningRate;
+        });
+    }
+
+
+    getInputLength(): number {
+        return this.layers[0].inputNodes;
+    }
+
+
     toJSON(): any {
         return {
             layers: this.layers.map(layer => layer.toJSON())

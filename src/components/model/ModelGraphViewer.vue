@@ -48,8 +48,8 @@ class Node {
             const layer = nodeLayers[i]
             for (let j = 0; j < layer.length; j++) {
                 const node = layer[j]
-                node.x = i * 100
-                node.y = j * 100
+                node.x = i * 300
+                node.y = j * 300
             }
         }
     }
@@ -287,7 +287,7 @@ let chartInstance: echarts.ECharts | null = null;
 type EChartsOption = echarts.EChartsOption;
 
 function initChart() {
-    chartInstance = echarts.init(chartRef.value, null, { renderer: 'svg' });
+    chartInstance = echarts.init(chartRef.value);
     var option: EChartsOption;
 
     option = {
@@ -301,7 +301,7 @@ function initChart() {
             {
                 type: 'graph',
                 layout: 'none',
-                symbolSize: 50,
+                symbolSize: 10,
                 roam: true,
                 label: {
                     show: true
@@ -345,6 +345,9 @@ function initChart() {
             }
         })
     });
+    // chartInstance.getZr().on('click', function (params: any) {
+    //     console.log(chartInstance?.getOption().series[0].zoom)
+    // })
 }
 
 

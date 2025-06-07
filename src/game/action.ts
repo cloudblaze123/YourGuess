@@ -22,10 +22,15 @@ class ReverseResultAction extends Action {
 }
 
 
+class endGameAction extends Action {}
+
+
+
 
 export {
     Action,
     NoneAction,
     GuessAction,
-    ReverseResultAction
+    ReverseResultAction,
+    endGameAction
 };

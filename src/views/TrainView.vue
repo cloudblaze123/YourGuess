@@ -1,6 +1,8 @@
 <template>
     <div>训练模型</div>
 
+    <TrainModel />
+
     <ModelGraphViewer ref="modelGraphViewer" />
 
     <div class="flex flex-col mt-8">
@@ -29,6 +31,8 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
+
+import TrainModel from '@/components/train/TrainModel.vue';
 
 import ModelList from '@/components/model/ModelList.vue'
 

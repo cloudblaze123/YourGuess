@@ -1,5 +1,5 @@
 import { Agent } from "./agent/agent";
-import { GuessAction, ReverseResultAction } from "./action";
+import { GuessAction, ReverseResultAction, endGameAction } from "./action";
 import { Game } from "./game";
 
 import { sleep } from "@/utils/common";
@@ -22,24 +22,26 @@ class GameEnvironment {
     }
 
 
-    start() {
+    async start() {
         this.lastAgent = null;
 
         this._initAgents();
         this.game.initGame();
         console.log(`Target number is ${this.game.target}`);
-        this.loop();
+        await this.loop();
     }
 
 
     _initAgents() {
         this.attacker.OnGameStarting()
         this.defender.OnGameStarting()
+        this.attacker.gameInstance = this.game;
+        this.defender.gameInstance = this.game;
     }
 
 
     async loop() {
-        await sleep(1000)
+        // await sleep(1000)
         while (true) {
             if (this.game.isGameOver()) {
                 console.log("Game over");
@@ -52,6 +54,10 @@ class GameEnvironment {
 
 
             const action = this.lastAgent?.action;
+            if (action instanceof endGameAction) {
+                console.log("Game ended by agent");
+                break;
+            }
             if (action instanceof GuessAction) {
                 this.game.guessNum = action.guess;
                 console.log(`Attacker guessed ${action.guess}`);
@@ -66,7 +72,7 @@ class GameEnvironment {
                 this.game.next()
             }
 
-            await sleep(20);
+            // await sleep(20);
         }
     }
 
