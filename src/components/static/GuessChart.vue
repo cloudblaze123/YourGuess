@@ -26,6 +26,20 @@ const props = defineProps({
 });
 
 
+defineExpose({
+    updateChartFunc
+})
+
+
+function updateChartFunc() {
+    if (chartInstance) {
+        chartInstance.dispose();
+        chartInstance = null;
+    }
+    initChart()
+}
+
+
 watch(props.guesses, refreshChart)
 
 

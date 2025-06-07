@@ -33,10 +33,10 @@ class GameEnvironment {
 
 
     _initAgents() {
-        this.attacker.OnGameStarting()
-        this.defender.OnGameStarting()
         this.attacker.gameInstance = this.game;
         this.defender.gameInstance = this.game;
+        this.attacker.OnGameStarting()
+        this.defender.OnGameStarting()
     }
 
 

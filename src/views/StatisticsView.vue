@@ -6,7 +6,21 @@
         </select>
         <button type="submit" class="btn btn-primary">确认</button>
     </form>
-    <GraphGameEnvironment :attacker="attacker" :defender="defender" />
+
+    <div class="flex flex-col">
+        <div class="text-xl">Setting</div>
+        <form @submit.prevent="updateSetting">
+            <div class="flex mt-2">
+                <label for="min">Min:</label>
+                <input type="number" v-model="min">
+                <label for="max">Max:</label>
+                <input type="number" v-model="max">
+            </div>
+            <button class="btn btn-primary mt-2">Confirm</button>
+        </form>
+    </div>
+
+    <GraphGameEnvironment ref="graphGameEnvironmentRef" :attacker="attacker" :defender="defender" />
 </template>
 
 
@@ -14,6 +28,19 @@
 import { ref } from 'vue'
 
 import GraphGameEnvironment from '@/components/static/GraphGameEnvironment.vue';
+
+
+
+const graphGameEnvironmentRef = ref<InstanceType<typeof GraphGameEnvironment> | null>(null);
+const max = ref(100);
+const min = ref(1);
+
+
+function updateSetting() {
+    graphGameEnvironmentRef.value?.setupGame(min.value, max.value)
+}
+
+
 
 
 import { Agent } from '@/game/agent/agent';

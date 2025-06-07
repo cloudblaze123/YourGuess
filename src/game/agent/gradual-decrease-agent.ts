@@ -11,7 +11,8 @@ class GradualDecreaseAgent extends Agent {
     constructor() {
         super();
         this.OnGameStarting = () => {
-            this.lastGuess = 101;
+            const max = this.gameInstance!.max;
+            this.lastGuess = max + 1;
         }
 
         this.onUpdate = () => {

@@ -11,7 +11,8 @@ class GradualIncreaseAgent extends Agent {
     constructor() {
         super();
         this.OnGameStarting = () => {
-            this.lastGuess = -1;
+            const min = this.gameInstance!.min;
+            this.lastGuess = min - 1;
         }
 
         this.onUpdate = () => {

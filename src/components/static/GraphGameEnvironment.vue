@@ -4,7 +4,7 @@
         <button class="btn btn-primary mb-4" @click="resetGame">重置游戏</button>
         <div>target: {{ target }}</div>
         
-        <GuessChart :guesses="guessHistory" :results="resultHistory" :game-instance="game" />
+        <GuessChart ref="guessChartRef" :guesses="guessHistory" :results="resultHistory" :game-instance="game" />
 
     </div>
 </template>
@@ -31,6 +31,20 @@ const props = defineProps({
         required: true
     }
 })
+
+
+defineExpose({
+    setupGame
+})
+
+
+const guessChartRef = ref<InstanceType<typeof GuessChart> | null>(null)
+
+function setupGame(min: number, max: number) {
+    game.min = min
+    game.max = max
+    guessChartRef.value!.updateChartFunc()
+}
 
 
 
