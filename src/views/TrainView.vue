@@ -3,8 +3,6 @@
 
     <TrainModel />
 
-    <ModelGraphViewer ref="modelGraphViewer" />
-
     <div class="flex flex-col mt-8">
         <div>【输入值】与【目标值】（1到0之间）之间用 > 分割</div>
         <div>多个值之间用空格分隔</div>
@@ -68,8 +66,6 @@ function trainModel() {
             nn.train(input, target);
         }
     }
-
-    updateChart();
 }
 
 
@@ -80,18 +76,7 @@ function forward() {
 }
 
 
-function updateChart() {
-    modelGraphViewer.value!.updateChart(nn);
-}
-
-
-
-
 const currentModel = ref('')
-
-
-import ModelGraphViewer from '@/components/model/ModelGraphViewer.vue'
-const modelGraphViewer = ref<InstanceType<typeof ModelGraphViewer> | null>(null)
 
 
 import { useModelStore } from '@/stores/model'
@@ -102,7 +87,6 @@ function onSelectModel(modelName: string) {
     const model = modelStore.models[modelName];
     nn = NeuralNetwork.fromJSON(model);
     currentModel.value = modelName;
-    updateChart();
 }
 
 </script>

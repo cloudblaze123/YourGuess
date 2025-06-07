@@ -19,6 +19,8 @@
     </div>
 
     <GameRecordPlayer ref="gameRecordPlayerRef" />
+    
+    <ModelGraphViewer ref="modelGraphViewerRef" />
 </template>
 
 
@@ -28,10 +30,16 @@ import ModelList from '../model/ModelList.vue';
 import GameRecordPlayer from '../static/GameRecordPlayer.vue';
 
 
+import ModelGraphViewer from '@/components/model/ModelGraphViewer.vue'
+const modelGraphViewerRef = ref<InstanceType<typeof ModelGraphViewer> | null>(null)
+
+
 import { useModelStore } from '@/stores/model';
 const modelStore = useModelStore();
+
 function onModelSelected(modelName: string){
     model = modelStore.getModel(modelName)
+    modelGraphViewerRef.value!.updateChart(model);
 }
 
 
@@ -65,11 +73,14 @@ async function train() {
     const trainTimes = trainTimesRef.value;
     const guesserNetwork = new GuesserNeuralNetwork(model);
 
+    const game = new Game();
+    game.max = 20;
+    game.min = 1;
+    const attacker = new ModelAgent(model);
+    const defender = new HonestAgent();
+    const environment = new GameEnvironment(game, attacker, defender);
+
     for (let i = 0; i < trainTimes; i++) {
-        const game = new Game();
-        const attacker = new ModelAgent(model);
-        const defender = new HonestAgent();
-        const environment = new GameEnvironment(game, attacker, defender);
         await environment.start();
 
         if (showChart.value) {

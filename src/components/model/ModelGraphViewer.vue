@@ -316,7 +316,7 @@ function initChart() {
 
     option = {
         title: {
-            text: 'Basic Graph'
+            text: 'Model Graph'
         },
         tooltip: {},
         // animationDurationUpdate: 1500,
