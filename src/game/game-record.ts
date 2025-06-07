@@ -14,7 +14,7 @@ class GameRecord {
     }
 
     
-    static readFromGame(game: Game) {
+    static generateFromGame(game: Game) {
         const record = new GameRecord();
 
         record.max = game.max;

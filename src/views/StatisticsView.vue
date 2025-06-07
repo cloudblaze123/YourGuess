@@ -7,7 +7,6 @@
         <button type="submit" class="btn btn-primary">确认</button>
     </form>
     <GraphGameEnvironment :attacker="attacker" :defender="defender" />
-    <GameRecordPlayer :record="record" />
 </template>
 
 
@@ -15,20 +14,6 @@
 import { ref } from 'vue'
 
 import GraphGameEnvironment from '@/components/static/GraphGameEnvironment.vue';
-
-
-import GameRecordPlayer from '@/components/static/GameRecordPlayer.vue';
-
-import { Game } from '@/game/game';
-import { GameEnvironment } from '@/game/game-environment';
-import { GameRecord } from '@/game/game-record';
-
-const game = new Game();
-const gameEnv = new GameEnvironment(game, new RandomAgent(), new HonestAgent());
-// gameEnv.start();
-const record = ref(GameRecord.readFromGame(game));
-
-
 
 
 import { Agent } from '@/game/agent/agent';

@@ -1,25 +1,32 @@
 <template>
-    <button @click="play" class="btn btn-primary">play</button>
     <div ref="chartRef" style="width: 600px; height: 600px;"></div>
 </template>
 
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue';
+import { ref, onUnmounted } from 'vue';
 import { GameRecord } from '@/game/game-record'
 
 
-const props = defineProps({
-    record: {
-        type: GameRecord,
-        required: true,
-    },
-});
+let record: GameRecord | null = null;
 
 
+defineExpose({
+    play
+})
 
-
-function play() {
+// 播放开始后初始化图表
+function play(propRecord: GameRecord) {
+    record = propRecord
+    if (!record) {
+        console.log('record is null')
+        return;
+    }
+    if (chartInstance) {
+        chartInstance.dispose();
+        chartInstance = null;
+    }
+    initChart()
     refreshChart()
 }
 
@@ -40,8 +47,11 @@ function refreshChart() {
         console.log('chartInstance is null')
         return
     }
-
-    const history = props.record.history
+    if (!record) {
+        console.log('record is null')
+        return
+    }
+    const history = record.history
     const guessData = history.map(item => item.guess)
     const resultData = history.map(item => item.result)
     
@@ -53,17 +63,10 @@ function refreshChart() {
 
 function initChart() {
     chartInstance = echarts.init(chartRef.value);
-    const option = generateChartOption(props.record.max, props.record.min);
+    const option = generateChartOption(record!.max, record!.min);
     option && chartInstance.setOption(option);
 }
 
-
-
-
-// 在组件挂载后初始化图表
-onMounted(() => {
-    initChart();
-});
 
 // 在组件销毁前销毁 ECharts 实例
 onUnmounted(() => {
