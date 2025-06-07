@@ -184,9 +184,11 @@ class TrainDataFactory {
 
 class GuesserNeuralNetwork {
     network: NeuralNetwork;
+    explorationRate: number = 0.1;
 
-    constructor(network: NeuralNetwork) {
+    constructor(network: NeuralNetwork, explorationRate: number = 0.1) {
         this.network = network;
+        this.explorationRate = explorationRate;
     }
 
     isInputAffordable(gameState: GameState) {
@@ -210,6 +212,14 @@ class GuesserNeuralNetwork {
     }
 
     makeGuess(gameState: GameState): number {
+        if (Math.random() < this.explorationRate) {
+            return this.makeRandomGuess(gameState);
+        } else {
+            return this.makeNetworkGuess(gameState);
+        }
+    }
+
+    makeNetworkGuess(gameState: GameState): number {
         if (!this.isInputAffordable(gameState)){
             console.log("can't afford gameState", gameState);
             throw new Error("can't afford gameState");
@@ -221,6 +231,14 @@ class GuesserNeuralNetwork {
         const output = this.network.forward(normalizedInputs)[0];
         const guess = Math.round(output * (max - min) + min);
 
+        return guess;
+    }
+
+    makeRandomGuess(gameState: GameState): number {
+        const max = gameState.max;
+        const min = gameState.min;
+        const guess = Math.round(Math.random() * (max - min) + min);
+        console.log("random guess", guess);
         return guess;
     }
 
@@ -244,7 +262,7 @@ class GuesserNeuralNetwork {
         
         const reward = trainData.reward;
         // 奖励越高，学习率越大
-        const newLearningRate = 0.1 * Math.min(-Math.exp(reward), 1);
+        const newLearningRate = 0.1 * Math.min(Math.exp(reward), 1);
 
         this.network.setLearningRate(newLearningRate);
         this.network.train(inputs, targets);

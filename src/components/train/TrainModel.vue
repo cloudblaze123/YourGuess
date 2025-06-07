@@ -18,6 +18,8 @@
         </div>
     </div>
 
+    <div v-if="showChart">Target {{ targetNumber }}</div>
+
     <GameRecordPlayer ref="gameRecordPlayerRef" />
     
     <ModelGraphViewer ref="modelGraphViewerRef" />
@@ -55,6 +57,7 @@ const gameRecordPlayerRef = ref<typeof GameRecordPlayer | null>(null);
 
 const showChart = ref(false);
 
+const targetNumber = ref(-1);
 
 
 import { Game } from '@/game/game'
@@ -86,6 +89,7 @@ async function train() {
         if (showChart.value) {
             const record = GameRecord.generateFromGame(game);
             gameRecordPlayerRef.value?.play(record);
+            targetNumber.value = game.target;
         }
 
         guesserNetwork.trainByGame(game);
