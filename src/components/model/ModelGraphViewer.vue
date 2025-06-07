@@ -19,9 +19,26 @@ defineExpose({
 
 let network: NeuralNetwork | null = null;
 
+// 权重最大绝对值，用于计算线条相对宽度
+let absMaxWeight = 0
+
 function updateChart(v_network: NeuralNetwork) {
     network = v_network;
+    absMaxWeight = calAbsMaxWeight(network)
     refreshChart();
+}
+
+function calAbsMaxWeight(network: NeuralNetwork) {
+    const layers = network.layers
+    const weightsArr = layers!.map(layer => layer.weights.toArray()) as Array<number[][]>
+    const flattenWeights = weightsArr.flat().flat() as number[]
+
+    let absMaxWeight = Math.max(...flattenWeights.map(Math.abs))
+    if (absMaxWeight === 0) {
+        absMaxWeight = 1
+    }
+
+    return absMaxWeight
 }
 
 
@@ -44,12 +61,21 @@ class Node {
 
 
     static layoutNodes(nodeLayers: Node[][]) {
+        const xGap = 30
+        const yGap = 6
+
+        const maxYNodeLength = Math.max(...nodeLayers.map(layer => layer.length))
+        const centerY = maxYNodeLength / 2 * yGap
+
         for (let i = 0; i < nodeLayers.length; i++) {
             const layer = nodeLayers[i]
             for (let j = 0; j < layer.length; j++) {
                 const node = layer[j]
-                node.x = i * 300
-                node.y = j * 300
+                node.x = i * xGap
+                
+                // 垂直居中
+                const yOffset = - layer.length / 2 * yGap
+                node.y = j * yGap + centerY + yOffset
             }
         }
     }
@@ -206,12 +232,12 @@ class Link {
         return links
     }
 
-    static createByNodeLayers(nodeLayer: Node[][]) {
+    static createByNodeLayers(nodeLayers: Node[][]) {
         const links: Link[] = []
 
-        for (let i = 0; i < nodeLayer.length - 1; i++) {
-            const fromLayer = nodeLayer[i]
-            const toLayer = nodeLayer[i + 1]
+        for (let i = 0; i < nodeLayers.length - 1; i++) {
+            const fromLayer = nodeLayers[i]
+            const toLayer = nodeLayers[i + 1]
 
             links.push(...Link.createBetweenNodeLayer(fromLayer, toLayer))
         }
@@ -220,15 +246,6 @@ class Link {
     }
 
     _getRelativeWidth() {
-        const layers = network?.layers
-        const weightsArr = layers!.map(layer => layer.weights.toArray()) as Array<number[][]>
-        const flattenWeights = weightsArr.flat().flat() as number[]
-
-        let absMaxWeight = Math.max(...flattenWeights.map(Math.abs))
-        if (absMaxWeight === 0) {
-            absMaxWeight = 1
-        }
-
         return Math.abs(this.value / absMaxWeight) * 5 + 1
     }
 
@@ -255,6 +272,8 @@ class Link {
 const nodesData: any[] = []
 const linksData: any[] = []
 
+let isLargeData: boolean = false
+
 
 function prepareData() {
     if (!network) {
@@ -267,7 +286,12 @@ function prepareData() {
     const nodeLayers = Node.createNodeLayers()
     const nodes = Node.convertNodeLayersToNodeArr(nodeLayers)
     const links = Link.createByNodeLayers(nodeLayers)
-
+    if (nodes.length < 50) {
+        isLargeData = false
+    } else {
+        isLargeData = true
+    }
+    
     nodesData.push(...nodes.map(node => node.toJSON()))
     linksData.push(...links.map(link => link.toJSON()))
 
@@ -295,13 +319,23 @@ function initChart() {
             text: 'Basic Graph'
         },
         tooltip: {},
-        animationDurationUpdate: 1500,
-        animationEasingUpdate: 'quinticInOut',
+        // animationDurationUpdate: 1500,
+        // animationEasingUpdate: 'quinticInOut',
         series: [
             {
                 type: 'graph',
                 layout: 'none',
-                symbolSize: 10,
+                symbolSize: (value, params) => {
+                    const nodeSize = nodesData.length
+                    // 节点数量越多，节点尺寸越小
+                    // 从而减少节点重叠的情况
+                    return Math.max(30 - 0.1 * Math.pow(nodeSize, 1.3), 1)
+                },
+                emphasis: {
+                    // 节点数量很多时，鼠标悬停时会过度放大节点
+                    // 故禁用该配置
+                    scale: false
+                },
                 roam: true,
                 label: {
                     show: true
@@ -329,21 +363,33 @@ function initChart() {
             return
         }
         console.log(params.data);
+        let templinksData: any[]
 
         const name = params.data.name;
-        for (const link of linksData) {
-            if (link.source !== name && link.target !== name) {
+
+        const relateLinksData: any[] = linksData.filter(link => {
+            return link.source === name || link.target === name
+        });
+
+
+        if (!isLargeData){
+            templinksData = linksData
+            for (const link of templinksData) {
                 link.lineStyle.opacity = 0.1;
-            } else {
+            }
+            for (const link of relateLinksData) {
                 link.lineStyle.opacity = 0.9;
             }
+        } else {
+            // 如果数据量很大，只显示与当前点击节点有关的链接
+            templinksData = relateLinksData
         }
 
         chartInstance?.setOption({
             series: {
-                links: linksData
+                links: templinksData
             }
-        })
+        });
     });
     // chartInstance.getZr().on('click', function (params: any) {
     //     console.log(chartInstance?.getOption().series[0].zoom)
@@ -356,7 +402,8 @@ function refreshChart() {
     chartInstance?.setOption({
         series: {
             data: nodesData,
-            links: linksData
+            // 如果数据量很大，则不显示链接，以提高性能（只在点击后显示与点击节点有关的链接）
+            links: isLargeData ? [] : linksData,
         }
     })
 }
