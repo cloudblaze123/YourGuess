@@ -35,7 +35,7 @@
 
 
         <div class="lg:w-0 lg:flex-1">
-            <div v-if="modelName">
+            <div v-show="modelName">
                 <div v-if="showChart">
                     <div>Target {{ targetNumber }}</div>
     
@@ -47,6 +47,7 @@
                     <ModelGraphViewer ref="modelGraphViewerRef" />
                 </div>
             </div>
+            <div v-show="!modelName" class="text-lg">请先选择模型</div>
         </div>
     </div>
 </template>
@@ -70,10 +71,13 @@ const modelStore = useModelStore();
 function onModelSelected(propModelName: string) {
     modelName.value = propModelName
     model = modelStore.getModel(propModelName)
-    modelGraphViewerRef.value!.updateChart(model);
+    updateChart()
 }
 
 
+function updateChart() {
+    modelGraphViewerRef.value!.updateChart(model);
+}
 
 
 import { NeuralNetwork } from '@/model/neural-network';
@@ -142,6 +146,8 @@ async function train() {
         gameRecordPlayerRef.value?.play(record);
         targetNumber.value = game.target;
     }
+
+    updateChart()
 }
 
 </script>

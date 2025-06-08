@@ -1,7 +1,7 @@
 <template>
     <div>
         <!-- <div class="text-lg">Model List</div> -->
-        <ul v-if="modelNames.length > 0">
+        <ul v-if="modelNames.length > 0" class="space-y-2">
             <li v-for="modelName in modelNames">
                 <button @click="selectModel(modelName)" class="btn btn-outline">
                     {{ modelName }}
