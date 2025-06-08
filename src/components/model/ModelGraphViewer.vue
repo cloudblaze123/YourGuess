@@ -286,7 +286,7 @@ function prepareData() {
     const nodeLayers = Node.createNodeLayers()
     const nodes = Node.convertNodeLayersToNodeArr(nodeLayers)
     const links = Link.createByNodeLayers(nodeLayers)
-    if (nodes.length < 50) {
+    if (links.length < 250) {
         isLargeData = false
     } else {
         isLargeData = true
@@ -375,7 +375,7 @@ function initChart() {
         if (!isLargeData){
             templinksData = linksData
             for (const link of templinksData) {
-                link.lineStyle.opacity = 0.1;
+                link.lineStyle.opacity = 0.02;
             }
             for (const link of relateLinksData) {
                 link.lineStyle.opacity = 0.9;
