@@ -31,19 +31,19 @@ class Logger {
             const stack = new Error().stack
             if (stack) {
                 const caller = stack.split('\n')[2].trim();
-                prefix += ` ${caller}\n`;
+                if (prefix) {
+                    prefix += ' ';
+                }
+                prefix += `${caller}\n`;
             }
         }
 
-    
-        let bakedParams = [];
-        if (prefix) {
-            bakedParams.push(prefix);
-        }
-        bakedParams.push(...params);
 
-        
-        console.log(...bakedParams);
+        if (prefix) {
+            console.log(prefix, ...params);
+        } else {
+            console.log(...params);
+        }
     }
 
 }
