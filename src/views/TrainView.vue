@@ -1,6 +1,5 @@
 <template>
-    <div>训练模型</div>
-
+    <!-- <div>训练模型</div> -->
     <TrainModel />
 
     <TrainNeuralNetwork />

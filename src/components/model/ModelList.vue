@@ -1,8 +1,8 @@
 <template>
     <div>
-        <div class="text-lg">Model List</div>
-        <ul class="list">
-            <li v-for="modelName in modelNames" class="list-row">
+        <!-- <div class="text-lg">Model List</div> -->
+        <ul class="">
+            <li v-for="modelName in modelNames" class="">
                 <button @click="selectModel(modelName)" class="btn btn-outline">
                     {{ modelName }}
                 </button>
