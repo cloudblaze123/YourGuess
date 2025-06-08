@@ -3,11 +3,18 @@
         <button class="btn btn-primary mb-4" @click="resetGame">重置游戏</button>
         <div v-if="debug">target: {{ target }}</div>
         
-        <GuessChartInput :guesses="guessHistory" :results="resultHistory" :game-instance="game" @guessed="handleGuess" />
-
-        <GuessHistory :guesses="guessHistory" :results="resultHistory" class="h-64 overflow-auto mb-4" />
-        <GuessInput :guess="guess" @guessed="handleGuess" />
-
+        <div class="lg:flex">
+            <div class="flex justify-center lg:w-0 lg:flex-1">
+                <GuessChartInput :guesses="guessHistory" :results="resultHistory" :game-instance="game" @guessed="handleGuess" />
+            </div>
+    
+            <div class="flex flex-col m-8 lg:w-80">
+                <label>Your Guess:</label>
+                <GuessInput :guess="guess" @guessed="handleGuess" />
+                <GuessHistory :guesses="guessHistory" :results="resultHistory" class="h-64 overflow-auto mb-4" />
+            </div>
+        </div>
+        
         <GameSettingView class="mt-4" />
     </div>
 </template>
