@@ -17,6 +17,10 @@ class GameEnvironment {
     lastAgent: Agent | null = null;
 
 
+    updateInterval = 0; // ms，游戏每轮更新间隔时间，默认为0，即立即更新
+    startDelay = 0; // ms，游戏开始前的延迟时间，方便观察效果
+
+
     constructor(game: Game, attacker: Agent, defender: Agent) {
         this.game = game;
         this.attacker = attacker;
@@ -43,7 +47,7 @@ class GameEnvironment {
 
 
     async loop() {
-        // await sleep(1000)
+        await sleep(this.startDelay)
         while (true) {
             if (this.game.isGameOver()) {
                 logger.log("Game over");
@@ -74,7 +78,7 @@ class GameEnvironment {
                 this.game.next()
             }
 
-            // await sleep(20);
+            await sleep(this.updateInterval);
         }
     }
 
