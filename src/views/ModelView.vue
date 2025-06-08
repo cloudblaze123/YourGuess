@@ -1,10 +1,10 @@
 <template>
-    <div class="lg:flex">
+    <div class="lg:flex lg:space-x-2">
         <div class="w-64">
             <!-- sidebar header -->
-            <div class="flex space-x-2">
+            <div class="flex justify-between">
                 <h2 class="text-2xl mb-4">模型列表</h2>
-                <button @click="navigation ='model-add'" class="btn btn-outline">添加</button>
+                <button @click="navigation ='model-add'" class="btn btn-sm btn-outline">添加</button>
             </div>
 
             <ModelList @select-model="onSelectModel" class="mt-8"/>

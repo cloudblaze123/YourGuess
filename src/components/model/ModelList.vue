@@ -1,13 +1,14 @@
 <template>
     <div>
         <!-- <div class="text-lg">Model List</div> -->
-        <ul class="">
-            <li v-for="modelName in modelNames" class="">
+        <ul v-if="modelNames.length > 0">
+            <li v-for="modelName in modelNames">
                 <button @click="selectModel(modelName)" class="btn btn-outline">
                     {{ modelName }}
                 </button>
             </li>
         </ul>
+        <div v-else class="text-center">No models</div>
     </div>
 </template>
 

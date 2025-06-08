@@ -4,7 +4,7 @@
     <div class="mt-4 lg:flex lg:space-x-2">
         <div class="flex flex-col lg:w-52">
             <div>
-                当前模型：<span class="outline w-fit p-1 rounded-sm">{{ modelName }}</span>
+                当前模型：<span v-if="modelName" class="outline w-fit p-1 rounded-sm">{{ modelName }}</span>
             </div>
             
             <div class="collapse collapse-arrow">
