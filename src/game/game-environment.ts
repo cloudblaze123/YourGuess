@@ -3,8 +3,7 @@ import { GuessAction, ReverseResultAction, endGameAction } from "./action";
 import { Game } from "./game";
 
 import { sleep } from "@/utils/common";
-
-
+import { Logger } from "@/utils/logger";
 
 
 class GameEnvironment {
@@ -14,6 +13,7 @@ class GameEnvironment {
 
     lastAgent: Agent | null = null;
 
+    logger: Logger = new Logger('GameEnv', true);
 
     constructor(game: Game, attacker: Agent, defender: Agent) {
         this.game = game;
@@ -27,7 +27,7 @@ class GameEnvironment {
 
         this._initAgents();
         this.game.initGame();
-        console.log(`Target number is ${this.game.target}`);
+        this.logger.log(`Target number is ${this.game.target}`);
         await this.loop();
     }
 
@@ -44,7 +44,7 @@ class GameEnvironment {
         // await sleep(1000)
         while (true) {
             if (this.game.isGameOver()) {
-                console.log("Game over");
+                this.logger.log("Game over");
                 break;
             }
 
@@ -55,16 +55,16 @@ class GameEnvironment {
 
             const action = this.lastAgent?.action;
             if (action instanceof endGameAction) {
-                console.log("Game ended by agent");
+                this.logger.log("Game ended by agent");
                 break;
             }
             if (action instanceof GuessAction) {
                 this.game.guessNum = action.guess;
-                console.log(`Attacker guessed ${action.guess}`);
+                this.logger.log(`Attacker guessed ${action.guess}`);
             }
             if (action instanceof ReverseResultAction) {
                 this.game.reversal = action.reverse;
-                console.log(`Defender reversed the result or not:`, action.reverse);
+                this.logger.log(`Defender reversed the result or not:`, action.reverse);
             }
 
 
