@@ -35,15 +35,17 @@
 
 
         <div class="lg:w-0 lg:flex-1">
-            <div v-if="showChart">
-                <div>Target {{ targetNumber }}</div>
-
-                <GameRecordPlayer ref="gameRecordPlayerRef" />
-            </div>
-
-            <div>
-                <div>模型结构</div>
-                <ModelGraphViewer ref="modelGraphViewerRef" />
+            <div v-if="modelName">
+                <div v-if="showChart">
+                    <div>Target {{ targetNumber }}</div>
+    
+                    <GameRecordPlayer ref="gameRecordPlayerRef" />
+                </div>
+    
+                <div>
+                    <div>模型结构</div>
+                    <ModelGraphViewer ref="modelGraphViewerRef" />
+                </div>
             </div>
         </div>
     </div>
