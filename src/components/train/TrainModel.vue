@@ -100,7 +100,7 @@ import { ModelAgent } from '@/game/agent/model-agent';
 import { HonestAgent } from '@/game/agent/honest-agent';
 import { GameEnvironment } from '@/game/game-environment';
 
-import { GuesserNeuralNetwork } from '@/model/guesser-neural-network';
+import { GuesserNeuralNetwork } from '@/model/guesser-neural-network/guesser-neural-network';
 import { GameRecord } from '@/game/game-record';
 
 import { sleep } from '@/utils/common';

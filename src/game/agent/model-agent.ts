@@ -2,7 +2,7 @@ import { Agent } from "./agent";
 import { GuessAction, endGameAction } from "@/game/action";
 
 import { NeuralNetwork } from "@/model/neural-network";
-import { GuesserNeuralNetwork } from "@/model/guesser-neural-network";
+import { GuesserNeuralNetwork } from "@/model/guesser-neural-network/guesser-neural-network";
 class ModelAgent extends Agent {
     network: GuesserNeuralNetwork;
     constructor(network: NeuralNetwork){
