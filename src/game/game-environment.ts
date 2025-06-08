@@ -78,7 +78,9 @@ class GameEnvironment {
                 this.game.next()
             }
 
-            await sleep(this.updateInterval);
+            if (this.updateInterval > 0){
+                await sleep(this.updateInterval);
+            }
         }
     }
 
