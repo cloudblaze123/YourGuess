@@ -1,11 +1,8 @@
 <template>
     <div>统计页面</div>
-    <form @submit.prevent="handleAgentSelect">
-        <select name="select" v-model="selectedOption" class="dark:bg-base-100 dark:text-white">
-            <option v-for="value, key in items" :value="key">{{ key }}</option>
-        </select>
-        <button type="submit" class="btn btn-primary">确认</button>
-    </form>
+    <select name="select" v-model="selectedOption" @change="handleAgentSelect" class="dark:bg-base-100 dark:text-white">
+        <option v-for="value, key in items" :value="key">{{ key }}</option>
+    </select>
 
     <div class="flex flex-col">
         <div class="text-xl">Setting</div>
