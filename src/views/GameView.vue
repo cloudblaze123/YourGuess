@@ -4,14 +4,16 @@
         <div v-if="debug">target: {{ target }}</div>
         
         <div class="lg:flex">
-            <div class="flex justify-center lg:w-0 lg:flex-1">
+            <div class="flex justify-center lg:w-0 lg:flex-2/3">
                 <GuessChartInput :guesses="guessHistory" :results="resultHistory" :game-instance="game" @guessed="handleGuess" />
             </div>
     
-            <div class="flex flex-col m-8 lg:w-80">
-                <label>Your Guess:</label>
-                <GuessInput :guess="guess" @guessed="handleGuess" />
-                <GuessHistory :guesses="guessHistory" :results="resultHistory" class="h-64 overflow-auto mb-4" />
+            <div class="flex lg:flex-1/3">
+                <div class="flex flex-col w-full lg:w-80">
+                    <label>Your Guess:</label>
+                    <GuessInput :guess="guess" @guessed="handleGuess" />
+                    <GuessHistory :guesses="guessHistory" :results="resultHistory" class="h-64 overflow-auto mb-4" />
+                </div>
             </div>
         </div>
         
