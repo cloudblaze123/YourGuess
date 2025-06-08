@@ -4,17 +4,20 @@
         <option v-for="value, key in items" :value="key">{{ key }}</option>
     </select>
 
-    <div class="flex flex-col">
-        <div class="text-xl">Setting</div>
-        <form @submit.prevent="updateSetting">
-            <div class="flex mt-2">
-                <label for="min">Min:</label>
-                <input type="number" v-model="min">
-                <label for="max">Max:</label>
-                <input type="number" v-model="max">
-            </div>
-            <button class="btn btn-primary mt-2">Confirm</button>
-        </form>
+    <div class="collapse collapse-arrow">
+        <input type="checkbox" checked />
+        <div class="collapse-title font-semibold">Setting</div>
+        <div class="collapse-content text-sm">
+            <form @submit.prevent="updateSetting">
+                <div class="flex">
+                    <label for="min">Min:</label>
+                    <input type="number" v-model="min">
+                    <label for="max">Max:</label>
+                    <input type="number" v-model="max">
+                </div>
+                <button class="btn btn-primary mt-2">Confirm</button>
+            </form>
+        </div>
     </div>
 
     <GraphGameEnvironment ref="graphGameEnvironmentRef" :attacker="attacker" :defender="defender" />
