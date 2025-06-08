@@ -14,16 +14,15 @@ class Logger {
         this.detailMode = detailMode;
     }
     
+
     log(...params: any[]) {
         if (!this.enabled) {
             return;
         }
-        this._log(...params);
-    }
 
-    _log(...params: any[]) {
+
         let prefix = '';
-
+    
         if (this.name) {
             prefix += `[${this.name}]`;
         }
@@ -36,13 +35,17 @@ class Logger {
             }
         }
 
+    
         let bakedParams = [];
         if (prefix) {
             bakedParams.push(prefix);
         }
         bakedParams.push(...params);
+
+        
         console.log(...bakedParams);
     }
+
 }
 
 export { Logger }
