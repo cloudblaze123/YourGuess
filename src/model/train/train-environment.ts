@@ -1,11 +1,7 @@
-import { GuesserNeuralNetwork } from "@/model/guesser-neural-network/guesser-neural-network";
 import { NeuralNetwork } from "../neural-network";
+import { Trainer } from "./trainer";
 
-
-import { GameEnvironment } from "@/game/game-environment";
 import { Game } from "@/game/game";
-import { ModelAgent } from "@/game/agent/model-agent";
-import { HonestAgent } from "@/game/agent/honest-agent";
 
 
 
@@ -13,6 +9,7 @@ import { HonestAgent } from "@/game/agent/honest-agent";
 class TrainEnvironment {
     network: NeuralNetwork;
     game: Game;
+    trainer: Trainer;
 
 
     onUpdate: (currentTrainTimes: number) => void = () => { };
@@ -21,23 +18,16 @@ class TrainEnvironment {
     constructor(network: NeuralNetwork, game: Game) {
         this.network = network;
         this.game = game;
+        
+        this.trainer = new Trainer(network, game);
+        this.trainer.onUpdate = (currentTrainTimes) => {
+            this.onUpdate(currentTrainTimes);
+        }
     }
 
 
     async start(trainTimes: number): Promise<void> {
-        const guesserNetwork = new GuesserNeuralNetwork(this.network);
-
-        const game = this.game;
-        const attacker = new ModelAgent(this.network);
-        const defender = new HonestAgent();
-        const environment = new GameEnvironment(game, attacker, defender);
-        environment.enableLog(false);
-
-        for (let i = 0; i < trainTimes; i++) {
-            await environment.start();
-            guesserNetwork.trainByGame(game);
-            this.onUpdate(i+1);
-        }
+        await this.trainer.start(trainTimes);
     }
 
 }
