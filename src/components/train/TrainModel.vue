@@ -103,7 +103,7 @@ const targetNumber = ref(-1);
 
 
 import { Game } from '@/game/game'
-import { TrainEnvironment } from '@/model/train-environment';
+import { TrainEnvironment } from '@/model/train/train-environment';
 
 import { GameRecord } from '@/game/game-record';
 
