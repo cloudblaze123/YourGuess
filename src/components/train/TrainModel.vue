@@ -107,9 +107,6 @@ import { TrainEnvironment } from '@/model/train-environment';
 
 import { GameRecord } from '@/game/game-record';
 
-import { sleep } from '@/utils/common';
-
-
 
 
 
@@ -128,10 +125,12 @@ async function train() {
 
     trainEnv.onUpdate = (currentTrainTimes: number) => {
         trainProgress.value = currentTrainTimes;
-        
-        const chartUpdateInterval = 100;
-        if (currentTrainTimes % chartUpdateInterval === 0) {
-            updateGuessChart(game);
+
+        if (showChart.value) {
+            const chartUpdateInterval = 100;
+            if (currentTrainTimes % chartUpdateInterval === 0) {
+                updateGuessChart(game);
+            }
         }
     }
 

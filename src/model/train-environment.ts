@@ -31,6 +31,7 @@ class TrainEnvironment {
         const attacker = new ModelAgent(this.network);
         const defender = new HonestAgent();
         const environment = new GameEnvironment(game, attacker, defender);
+        environment.enableLog(false);
 
         for (let i = 0; i < trainTimes; i++) {
             await environment.start();

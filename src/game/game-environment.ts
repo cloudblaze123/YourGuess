@@ -111,6 +111,12 @@ class GameEnvironment {
     isDefenderTurn(): boolean {
         return this.lastAgent === this.attacker;
     }
+
+
+
+    enableLog(enabled: boolean) {
+        logger.enabled = enabled;
+    }
 }
 
 
