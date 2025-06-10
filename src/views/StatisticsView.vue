@@ -25,7 +25,7 @@
             </div>
         </div>
 
-        <WinRateAssessment :attacker="attacker" />
+        <WinRateAssessment :attacker="attacker" :game="game" />
         <GraphGameEnvironment ref="graphGameEnvironmentRef" :attacker="attacker" :defender="defender" />
 
     </div>
@@ -44,11 +44,14 @@ const graphGameEnvironmentRef = ref<InstanceType<typeof GraphGameEnvironment> | 
 const max = ref(100);
 const min = ref(1);
 
-
+import { Game } from '@/game/game';
+const game = ref(new Game());
 
 
 function updateSetting() {
     graphGameEnvironmentRef.value?.setupGame(min.value, max.value)
+    game.value.min = min.value;
+    game.value.max = max.value;
 }
 
 

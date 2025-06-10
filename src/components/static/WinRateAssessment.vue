@@ -65,12 +65,17 @@ const props = defineProps({
     attacker: {
         type: Agent,
         required: true
+    },
+    game: {
+        type: Game,
+        required: true
     }
 })
 
 
 async function startAssessment() {
     const attacker = props.attacker;
+
     if (!attacker) {
         alert('请先选择猜数者');
         return;
@@ -84,7 +89,7 @@ async function startAssessment() {
     let winCount_ = 0;
     let round = 0;
 
-    const game = new Game();
+    const game = props.game;
     const defender = new HonestAgent();
     const gameEnv = new GameEnvironment(game, attacker, defender);
     gameEnv.enableLog(false);
