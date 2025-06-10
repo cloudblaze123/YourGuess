@@ -1,5 +1,6 @@
 import { Agent } from "./agent/agent";
 import { GuessAction, ReverseResultAction, endGameAction } from "./action";
+import { Result } from "./game";
 import { Game } from "./game";
 
 import { sleep } from "@/utils/common";
@@ -113,6 +114,22 @@ class GameEnvironment {
     }
 
 
+    getWinner(): Agent | null {
+        if (this.game.isGameOver()) {
+            const result = this.game.getLastResult()
+            if (result === Result.CORRECT) {
+                return this.attacker;
+            } else {
+                return this.defender;
+            }
+        }
+        return null;
+    }
+
+
+    getRounds(): number {
+        return this.game.getRounds();
+    }
 
     enableLog(enabled: boolean) {
         logger.enabled = enabled;

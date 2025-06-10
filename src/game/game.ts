@@ -91,6 +91,18 @@ export class Game{
         return false;
     }
 
+
+    getRounds():number{
+        return this.history.length;
+    }
+
+
+    getLastResult(): Result | null{
+        if (this.history.length <= 0) {
+            return null;
+        }
+        return this.history[this.history.length - 1].result;
+    }
 }
 
 

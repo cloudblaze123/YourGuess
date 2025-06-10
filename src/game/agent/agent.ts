@@ -16,7 +16,9 @@ class Agent {
     public OnGameStarting: () => void = () => { };
 
     // 当轮到 agent 进行行动时触发
-    public onUpdate: () => void = () => { };
+    public onUpdate: () => void = () => {
+        console.warn("Agent.onUpdate is not implemented");
+    };
     
     // 外部调用 agent.next(action) 方法通知游戏进行下一步
     public next(action: Action) {
