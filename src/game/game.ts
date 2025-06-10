@@ -103,6 +103,34 @@ export class Game{
         }
         return this.history[this.history.length - 1].result;
     }
+
+
+
+
+    toJSON():any{
+        return {
+            target: this.target,
+            guessNum: this.guessNum,
+            reversal: this.reversal,
+            min: this.min,
+            max: this.max,
+            maxGuessCount: this.maxGuessCount,
+            history: this.history,
+        };
+    }
+
+
+    static fromJSON(json:any): Game {
+        const game = new Game();
+        game.target = json.target;
+        game.guessNum = json.guessNum;
+        game.reversal = json.reversal;
+        game.min = json.min;
+        game.max = json.max;
+        game.maxGuessCount = json.maxGuessCount;
+        game.history = json.history;
+        return game;
+    }
 }
 
 

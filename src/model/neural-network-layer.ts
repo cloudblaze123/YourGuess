@@ -1,4 +1,15 @@
-import { matrix, Matrix, multiply, add, subtract, map, random, dotMultiply, transpose } from 'mathjs';
+import {
+    matrix,
+    Matrix,
+    multiply,
+    divide,
+    add,
+    map,
+    random,
+    zeros,
+    dotMultiply,
+    transpose
+} from 'mathjs';
 
 
 // 定义激活函数及其导数
@@ -71,6 +82,44 @@ class NeuralNetworkLayer {
         layer.weights = matrix(json.weights);
         layer.bias = matrix(json.bias);
         return layer;
+    }
+
+
+
+
+    copy(): NeuralNetworkLayer {
+        const newLayer = new NeuralNetworkLayer(this.inputNodes, this.outputNodes, this.learningRate);
+        newLayer.weights = this.weights.clone();
+        newLayer.bias = this.bias.clone();
+        return newLayer;
+    }
+
+
+
+
+    /**
+     * 计算将多个神经网络层的权重取平均后的结果
+     * @param layers 需要取平均的多个神经网络层，每个层结构需相同
+     * @returns 对所给多个神经网络层取平均后的新的神经网络层
+     */
+    static averageLayers(layers: NeuralNetworkLayer[]): NeuralNetworkLayer {
+        const inputNodes = layers[0].inputNodes;
+        const outputNodes = layers[layers.length - 1].outputNodes;
+        const learningRate = layers[0].learningRate;
+
+        let weights = zeros([outputNodes, inputNodes]);
+        let bias = zeros([outputNodes, 1]);
+
+        layers.forEach((layer) => {
+            weights = add(weights, layer.weights);
+            bias = add(bias, layer.bias);
+        });
+
+        const averageLayer = new NeuralNetworkLayer(inputNodes, outputNodes, learningRate);
+        averageLayer.weights = divide(weights, layers.length) as Matrix;
+        averageLayer.bias = divide(bias, layers.length) as Matrix;
+
+        return averageLayer;
     }
 }
 

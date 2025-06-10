@@ -100,6 +100,37 @@ class NeuralNetwork {
         });
         return network;
     }
+
+
+
+    copy(): NeuralNetwork {
+        const network = new NeuralNetwork();
+        network.layers = this.layers.map(layer => layer.copy());
+        return network;
+    }
+
+
+    /**
+     * 使用给定神经网络覆盖当前的神经网络
+     * @param network 
+     */
+    setBy(network: NeuralNetwork) {
+        this.layers = network.layers.map(layer => layer.copy());
+    }
+
+
+
+
+    static averageNetworks(networks: NeuralNetwork[]): NeuralNetwork {
+        const averagedNetwork = new NeuralNetwork();
+
+        for (let i = 0; i < networks[0].layers.length; i++) {
+            const layer = NeuralNetworkLayer.averageLayers(networks.map(network => network.layers[i]));
+            averagedNetwork.layers.push(layer);
+        }
+
+        return averagedNetwork;
+    }
 }
 
 
