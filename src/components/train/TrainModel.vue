@@ -71,12 +71,19 @@ const modelStore = useModelStore();
 function onModelSelected(propModelName: string) {
     modelName.value = propModelName
     model = modelStore.getModel(propModelName)
-    updateChart()
+    updateModelChart()
 }
 
 
-function updateChart() {
+function updateModelChart() {
     modelGraphViewerRef.value!.updateChart(model);
+}
+
+
+function updateGuessChart(game:Game) {
+    const record = GameRecord.generateFromGame(game);
+    gameRecordPlayerRef.value?.play(record);
+    targetNumber.value = game.target;
 }
 
 
@@ -96,14 +103,16 @@ const targetNumber = ref(-1);
 
 
 import { Game } from '@/game/game'
-import { ModelAgent } from '@/game/agent/model-agent';
-import { HonestAgent } from '@/game/agent/honest-agent';
-import { GameEnvironment } from '@/game/game-environment';
+import { TrainEnvironment } from '@/model/train-environment';
 
-import { GuesserNeuralNetwork } from '@/model/guesser-neural-network/guesser-neural-network';
 import { GameRecord } from '@/game/game-record';
 
 import { sleep } from '@/utils/common';
+
+
+
+
+
 async function train() {
     if (!model) {
         alert('请先选择模型')
@@ -111,43 +120,30 @@ async function train() {
     }
 
     const trainTimes = trainTimesRef.value;
-    const guesserNetwork = new GuesserNeuralNetwork(model);
 
     const game = new Game();
     game.max = 20;
     game.min = 1;
-    const attacker = new ModelAgent(model);
-    const defender = new HonestAgent();
-    const environment = new GameEnvironment(game, attacker, defender);
+    const trainEnv = new TrainEnvironment(model, game);
+
+    trainEnv.onUpdate = (currentTrainTimes: number) => {
+        trainProgress.value = currentTrainTimes;
+        
+        const chartUpdateInterval = 100;
+        if (currentTrainTimes % chartUpdateInterval === 0) {
+            updateGuessChart(game);
+        }
+    }
 
     isTraining.value = true;
-    for (let i = 0; i < trainTimes; i++) {
-        await sleep(1) // 需要增加一点延迟，视图才会正常更新，原因未明了
-
-        await environment.start();
-
-        // 每达到1%的训练进度，更新一次视图
-        if (i % Math.round(trainTimes / 100 + 1) === 0) {
-            trainProgress.value = i;
-
-            if (showChart.value) {
-                const record = GameRecord.generateFromGame(game);
-                gameRecordPlayerRef.value?.play(record);
-                targetNumber.value = game.target;
-            }
-        }
-
-        guesserNetwork.trainByGame(game);
-    }
+    await trainEnv.start(trainTimes);
     isTraining.value = false;
 
     if (showChart.value) {
-        const record = GameRecord.generateFromGame(game);
-        gameRecordPlayerRef.value?.play(record);
-        targetNumber.value = game.target;
+        updateGuessChart(game);
     }
 
-    updateChart()
+    updateModelChart()
 }
 
 </script>
