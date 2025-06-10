@@ -9,6 +9,12 @@
             </select>
         </div>
 
+        <div v-if="selectedOption === 'ModelAgent'">
+            当前模型：{{  }}
+            <div>模型列表</div>
+            <ModelList @selectModel="handleModelSelect" />
+        </div>
+
         <div class="collapse collapse-arrow">
             <input type="checkbox" checked />
             <div class="collapse-title font-semibold">Setting</div>
@@ -35,8 +41,27 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 
+import ModelList from '@/components/model/ModelList.vue';
 import WinRateAssessment from '@/components/static/WinRateAssessment.vue';
 import GraphGameEnvironment from '@/components/static/GraphGameEnvironment.vue';
+
+
+import { useModelStore } from '@/stores/model'
+const modelStore = useModelStore()
+
+const currentModelName = ref('')
+
+function handleModelSelect(modelName: string) {
+    const model = modelStore.getModel(modelName)
+    if (model) {
+        attacker.value = new ModelAgent(model)
+        currentModelName.value = modelName
+    } else {
+        alert('Model not found')
+    }
+}
+
+
 
 
 
@@ -84,6 +109,7 @@ const defender = new HonestAgent();
 
 function handleAgentSelect() {
     attacker.value = items.value[selectedOption.value];
+    currentModelName.value = '';
 }
 
 </script>

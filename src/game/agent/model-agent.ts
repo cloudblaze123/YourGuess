@@ -3,17 +3,32 @@ import { GuessAction, endGameAction } from "@/game/action";
 
 import { NeuralNetwork } from "@/model/neural-network";
 import { GuesserNeuralNetwork } from "@/model/guesser-neural-network/guesser-neural-network";
+
+
 class ModelAgent extends Agent {
-    network: GuesserNeuralNetwork;
-    constructor(network: NeuralNetwork){
+    network?: GuesserNeuralNetwork | null;
+    constructor(network: NeuralNetwork | null = null){
         super();
-        this.network = new GuesserNeuralNetwork(network);
+        this.setNetwork(network);
         this.onUpdate = () => {
             this.guess();
         }
     }
 
+    setNetwork(network: NeuralNetwork | null){
+        if (network) {
+            this.network = new GuesserNeuralNetwork(network);
+        } else {
+            this.network = null;
+        }
+    }
+
     guess(){
+        if (!this.network) {
+            console.warn("无猜数模型，无法猜数");
+            this.next(new endGameAction());
+            return;
+        }
         // 准备 inputs
         const inputData = GuesserNeuralNetwork.encodeGameState(this.gameInstance!);
         if (!this.network.isInputAffordable(inputData)){
