@@ -99,8 +99,8 @@ async function startAssessment() {
         await gameEnv.start();
         if (gameEnv.getWinner() === attacker) {
             winCount_++;
-            round += gameEnv.getRounds();
         }
+        round += gameEnv.getRounds();
     }
     isEvaluating.value = false;
 
