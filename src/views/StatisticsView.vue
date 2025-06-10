@@ -10,7 +10,7 @@
         </div>
 
         <div v-if="selectedOption === 'ModelAgent'">
-            当前模型：{{  }}
+            当前模型：{{ currentModelName }}
             <div>模型列表</div>
             <ModelList @selectModel="handleModelSelect" />
         </div>
