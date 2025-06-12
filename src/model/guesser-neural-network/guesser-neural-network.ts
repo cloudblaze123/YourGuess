@@ -4,6 +4,10 @@ import { GameState } from "./game-state";
 import { TrainData, TrainDataFactory } from "./train-data";
 import { Game } from "@/game/game";
 
+import { Logger } from "@/utils/logger";
+
+
+const logger = new Logger('guesser-neural-network', false);
 
 
 
@@ -11,7 +15,7 @@ class GuesserNeuralNetwork {
     network: NeuralNetwork;
     explorationRate: number;
 
-    constructor(network: NeuralNetwork, explorationRate: number = 0.1) {
+    constructor(network: NeuralNetwork, explorationRate: number = 0.5) {
         this.network = network;
         this.explorationRate = explorationRate;
     }
@@ -46,7 +50,7 @@ class GuesserNeuralNetwork {
 
     makeNetworkGuess(gameState: GameState): number {
         if (!this.isInputAffordable(gameState)){
-            console.log("can't afford gameState", gameState);
+            console.error("can't afford gameState", gameState);
             throw new Error("can't afford gameState");
         }
         const normalizedInputs = this._normalizeInputs(gameState.getEncodedState());
@@ -63,7 +67,7 @@ class GuesserNeuralNetwork {
         const max = gameState.max;
         const min = gameState.min;
         const guess = Math.round(Math.random() * (max - min) + min);
-        console.log("random guess", guess);
+        logger.log("random guess", guess);
         return guess;
     }
 
@@ -90,12 +94,12 @@ class GuesserNeuralNetwork {
         
         const reward = trainData.reward;
         // 奖励越高，学习率越大
-        const newLearningRate = 0.1 * Math.min(Math.exp(reward), 1);
+        const newLearningRate = 0.2 * Math.min(Math.exp(reward), 1);
 
         // 调试日志
-        console.log("guess", trainData.originGuess);
-        console.log("reward", trainData.reward);
-        console.log("newLearningRate", newLearningRate);
+        logger.log("guess", trainData.originGuess);
+        logger.log("reward", trainData.reward);
+        logger.log("newLearningRate", newLearningRate);
 
         this.network.setLearningRate(newLearningRate);
         this.network.train(inputs, targets);

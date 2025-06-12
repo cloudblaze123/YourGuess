@@ -22,15 +22,24 @@
                 <div>训练次数</div>
                 <input type="number" v-model="trainTimesRef">
                 <button @click="train" class="btn btn-primary">开始训练</button>
-                <div class="mt-4">
-                    <label>
-                        <input type="checkbox" v-model="showChart" />
-                        显示猜数过程图表
-                    </label>
+                <div class="mt-4 space-y-4">
+                    <div>
+                        <label class="cursor-pointer">
+                            <input type="checkbox" v-model="showChart" class="toggle"/>
+                            显示猜数过程图表
+                        </label>
+                    </div>
+                    <div>
+                        <label class="cursor-pointer">
+                            <input type="checkbox" v-model="isEnableParrallel" class="toggle"/>
+                            开启并行训练
+                        </label>
+                    </div>
                 </div>
             </div>
 
             <div v-if="isTraining">训练进度 {{ trainProgress }} / {{ trainTimesRef }}</div>
+            <div>训练用时 {{ trainingTime }} 秒</div>
         </div>
 
 
@@ -103,11 +112,14 @@ const targetNumber = ref(-1);
 
 
 import { Game } from '@/game/game'
-import { TrainEnvironment } from '@/model/train-environment';
+import { TrainEnvironment } from '@/model/train/train-environment';
 
 import { GameRecord } from '@/game/game-record';
 
 
+const isEnableParrallel = ref(false);
+
+const trainingTime = ref(0);
 
 
 async function train() {
@@ -115,17 +127,20 @@ async function train() {
         alert('请先选择模型')
         return
     }
+    const modelCopy = model.copy();
 
     const trainTimes = trainTimesRef.value;
-
+    const startTime = new Date().getTime();
+    
+    
     const game = new Game();
     game.max = 20;
     game.min = 1;
     const trainEnv = new TrainEnvironment(model, game);
-
+    
     trainEnv.onUpdate = (currentTrainTimes: number) => {
         trainProgress.value = currentTrainTimes;
-
+        
         if (showChart.value) {
             const chartUpdateInterval = 100;
             if (currentTrainTimes % chartUpdateInterval === 0) {
@@ -133,10 +148,31 @@ async function train() {
             }
         }
     }
+    
 
+    trainProgress.value = 0;
+
+    // 训练开始
     isTraining.value = true;
-    await trainEnv.start(trainTimes);
+    await trainEnv.start(trainTimes, isEnableParrallel.value);
     isTraining.value = false;
+
+
+    const endTime = new Date().getTime();
+    trainingTime.value = (endTime - startTime) / 1000;
+
+    
+    // 打印模型权重变化，用于检查并行训练功能是否正常
+    const modelWeight0Array = model.layers[0].weights.toArray() as number[][];
+    const modelCopyWeight0Array = modelCopy.layers[0].weights.toArray() as number[][];
+    for (let i = 0; i < modelWeight0Array.length; i++) {
+        for (let j = 0; j < modelWeight0Array[i].length; j++) {
+            if (modelWeight0Array[i][j] !== modelCopyWeight0Array[i][j]) {
+                console.log('model weight changed', i, j, modelWeight0Array[i][j] - modelCopyWeight0Array[i][j])
+            }
+        }
+    }
+
 
     if (showChart.value) {
         updateGuessChart(game);

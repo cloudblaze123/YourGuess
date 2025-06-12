@@ -1,5 +1,5 @@
 import { GuesserNeuralNetwork } from "@/model/guesser-neural-network/guesser-neural-network";
-import { NeuralNetwork } from "./neural-network";
+import { NeuralNetwork } from "../neural-network";
 
 
 import { GameEnvironment } from "@/game/game-environment";
@@ -10,7 +10,7 @@ import { HonestAgent } from "@/game/agent/honest-agent";
 
 
 
-class TrainEnvironment {
+class Trainer {
     network: NeuralNetwork;
     game: Game;
 
@@ -43,4 +43,4 @@ class TrainEnvironment {
 }
 
 
-export { TrainEnvironment }
+export { Trainer }
