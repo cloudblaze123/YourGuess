@@ -4,9 +4,17 @@ import { GuessAction, endGameAction } from "@/game/action";
 import { NeuralNetwork } from "@/model/neural-network";
 import { GuesserNeuralNetwork } from "@/model/guesser-neural-network/guesser-neural-network";
 
+import { Logger } from "@/utils/logger";
+
+
+const logger = new Logger("ModelAgent", false);
+
+
+
 
 class ModelAgent extends Agent {
     network?: GuesserNeuralNetwork | null;
+
     constructor(network: NeuralNetwork | null = null){
         super();
         this.setNetwork(network);
@@ -32,7 +40,7 @@ class ModelAgent extends Agent {
         // 准备 inputs
         const inputData = GuesserNeuralNetwork.encodeGameState(this.gameInstance!);
         if (!this.network.isInputAffordable(inputData)){
-            console.log("输入过长，无法进行预测");
+            logger.log("输入过长，无法进行预测");
             this.next(new endGameAction());
             return;
         }
