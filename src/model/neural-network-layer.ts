@@ -25,9 +25,9 @@ class NeuralNetworkLayer {
     weights: Matrix;
     bias: Matrix;
 
-    activation: Activation = Activation.get('sigmoid');
+    activation: Activation;
 
-    constructor(inputNodes: number, outputNodes: number, learningRate: number = 0.1) {
+    constructor(inputNodes: number, outputNodes: number, learningRate: number = 0.1, activationOption: string = 'sigmoid') {
         this.inputNodes = inputNodes;
         this.outputNodes = outputNodes;
         this.learningRate = learningRate;
@@ -35,6 +35,8 @@ class NeuralNetworkLayer {
         // 初始化权重和偏置
         this.weights = matrix(random([outputNodes, inputNodes]));
         this.bias = matrix(random([outputNodes, 1]));
+
+        this.activation = Activation.get(activationOption);
     }
 
     // 前向传播
