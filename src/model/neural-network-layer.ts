@@ -4,7 +4,6 @@ import {
     multiply,
     divide,
     add,
-    map,
     random,
     zeros,
     dotMultiply,
@@ -12,14 +11,9 @@ import {
 } from 'mathjs';
 
 
-// 定义激活函数及其导数
-function sigmoid(x: Matrix): Matrix {
-    return map(x, (value) => 1 / (1 + Math.exp(-value)));
-}
+import { Activation, Sigmoid } from './activation';
 
-function sigmoidDerivative(x: Matrix): Matrix {
-    return map(x, (value) => value * (1 - value));
-}
+
 
 
 // 定义神经网络层
@@ -30,6 +24,8 @@ class NeuralNetworkLayer {
 
     weights: Matrix;
     bias: Matrix;
+
+    activation: Activation = new Sigmoid();
 
     constructor(inputNodes: number, outputNodes: number, learningRate: number = 0.1) {
         this.inputNodes = inputNodes;
@@ -44,7 +40,7 @@ class NeuralNetworkLayer {
     // 前向传播
     forward(inputs: Matrix): Matrix {
         const outputs = add(multiply(this.weights, inputs), this.bias);
-        const outputsActivated = sigmoid(outputs);
+        const outputsActivated = this.activation.activate(outputs);
         return outputsActivated;
     }
 
@@ -58,7 +54,7 @@ class NeuralNetworkLayer {
         const outputs = this.forward(inputs);
         
         // 计算权重更新量
-        const gradientOutput = dotMultiply(sigmoidDerivative(outputs), errors);
+        const gradientOutput = dotMultiply(this.activation.derivative(outputs), errors);
         const gradientOutputScaled = multiply(gradientOutput, this.learningRate);
         const deltaWeightsScaled = multiply(gradientOutputScaled, transpose(inputs));
 
