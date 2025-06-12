@@ -25,7 +25,7 @@ class NeuralNetworkLayer {
     weights: Matrix;
     bias: Matrix;
 
-    activation: Activation = new Sigmoid();
+    activation: Activation = Activation.get('sigmoid');
 
     constructor(inputNodes: number, outputNodes: number, learningRate: number = 0.1) {
         this.inputNodes = inputNodes;

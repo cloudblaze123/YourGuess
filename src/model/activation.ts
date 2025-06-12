@@ -11,6 +11,20 @@ class Activation {
     derivative(x: Matrix): Matrix {
         return x;
     }
+
+
+    static get(name: string): Activation {
+        switch (name) {
+            case'sigmoid':
+                return new Sigmoid();
+            case'relu':
+                return new Relu();
+            case 'leakyrelu':
+                return new LeakyRelu();
+            default:
+                throw new Error(`Activation function ${name} not found.`);
+        }
+    }
 }
 
 
