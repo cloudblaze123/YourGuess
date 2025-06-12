@@ -154,7 +154,7 @@ async function train() {
 
     // 训练开始
     isTraining.value = true;
-    await trainEnv.start(trainTimes, isEnableParrallel.value);
+    await trainEnv.start(trainTimes, 'cross-entropy', isEnableParrallel.value);
     isTraining.value = false;
 
 

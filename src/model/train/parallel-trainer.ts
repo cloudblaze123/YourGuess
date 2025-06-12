@@ -25,7 +25,7 @@ class ParallelTrainer {
 
 
 
-    start(trainTimes: number): Promise<void> {
+    start(trainTimes: number, trainerName: string): Promise<void> {
         // 并行训练数
         const batchSize = 4;
         const trainTimesPerBatch = Math.ceil(trainTimes / batchSize);
@@ -47,7 +47,7 @@ class ParallelTrainer {
 
 
         for (let i = 0; i < batchSize; i++) {
-            workerProvider.create(this.network, this.game, trainTimesPerBatch);
+            workerProvider.create(this.network, this.game, trainTimesPerBatch, trainerName);
             
             trainTimes -= trainTimesPerBatch;
             if (trainTimes <= 0) {
