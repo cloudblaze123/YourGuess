@@ -15,6 +15,8 @@ class Activation {
 
     static get(name: string): Activation {
         switch (name) {
+            case'identity':
+                return new Identity();
             case'sigmoid':
                 return new Sigmoid();
             case'relu':
@@ -24,6 +26,19 @@ class Activation {
             default:
                 throw new Error(`Activation function ${name} not found.`);
         }
+    }
+}
+
+
+
+
+class Identity extends Activation {
+    activate(x: Matrix): Matrix {
+        return x;
+    }
+
+    derivative(x: Matrix): Matrix {
+        return map(x, (_value) => 1);
     }
 }
 
@@ -78,6 +93,7 @@ class LeakyRelu extends Activation {
 
 export {
     Activation,
+    Identity,
     Sigmoid,
     Relu,
     LeakyRelu
