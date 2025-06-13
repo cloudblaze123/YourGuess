@@ -19,15 +19,7 @@
             <input type="checkbox" checked />
             <div class="collapse-title font-semibold">Setting</div>
             <div class="collapse-content text-sm">
-                <form @submit.prevent="updateSetting">
-                    <div class="flex">
-                        <label for="min">Min:</label>
-                        <input type="number" v-model="min">
-                        <label for="max">Max:</label>
-                        <input type="number" v-model="max">
-                    </div>
-                    <button class="btn btn-primary mt-2">Confirm</button>
-                </form>
+                <GameSetting :game="game" @settingUpdated="updateSetting" />
             </div>
         </div>
 
@@ -42,6 +34,8 @@
 import { ref } from 'vue'
 
 import ModelList from '@/components/model/ModelList.vue';
+
+import GameSetting from '@/components/game/GameSetting.vue';
 import WinRateAssessment from '@/components/static/WinRateAssessment.vue';
 import GraphGameEnvironment from '@/components/static/GraphGameEnvironment.vue';
 
@@ -66,17 +60,16 @@ function handleModelSelect(modelName: string) {
 
 
 const graphGameEnvironmentRef = ref<InstanceType<typeof GraphGameEnvironment> | null>(null);
-const max = ref(100);
-const min = ref(1);
+
 
 import { Game } from '@/game/game';
 const game = ref(new Game());
 
 
-function updateSetting() {
-    graphGameEnvironmentRef.value?.setupGame(min.value, max.value)
-    game.value.min = min.value;
-    game.value.max = max.value;
+import { type GameOptions } from '@/game/game';
+function updateSetting(newOptions: GameOptions) {
+    graphGameEnvironmentRef.value?.setupGame(newOptions.min!, newOptions.max!)
+    game.value.setOptions(newOptions)
 }
 
 

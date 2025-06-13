@@ -17,7 +17,7 @@
             </div>
         </div>
         
-        <GameSettingView :game="game" class="mt-4" />
+        <GameSettingView :game="game" @setting-updated="updateSetting" class="mt-4" />
     </div>
 </template>
 
@@ -86,4 +86,9 @@ function resetGame() {
     resultHistory.value.length = 0
 }
 
+
+import { type GameOptions } from '@/game/game';
+function updateSetting(newOptions: GameOptions) {
+    game.setOptions(newOptions)
+}
 </script>

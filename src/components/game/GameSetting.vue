@@ -27,6 +27,13 @@ const props = defineProps({
 })
 
 
+const emit = defineEmits(['settingUpdated'])
+
+
+const min = ref(1)
+const max = ref(10)
+
+
 watch(() => props.game, (newVal) => {
     if (!newVal) return
     min.value = newVal.min
@@ -34,18 +41,16 @@ watch(() => props.game, (newVal) => {
 }, { immediate: true })
 
 
-const min = ref(0)
-const max = ref(10)
 
 
 function updateSetting() {
     if (!props.game) return
-    
+
     const options: GameOptions = {
         min: min.value,
         max: max.value
     }
-    props.game.setOptions(options)
+    emit('settingUpdated', options)
 }
 
 </script>

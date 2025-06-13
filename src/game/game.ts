@@ -52,7 +52,7 @@ class Game{
     }
 
 
-    private _generateRandomNumber(min: number, max: number): number {
+    _generateRandomNumber(min: number, max: number): number {
         return Math.floor(Math.random() * (max - min + 1)) + min;
     }
 
@@ -70,7 +70,7 @@ class Game{
     }
 
 
-    private _guess(number:number):Result{
+    _guess(number:number):Result{
         if(number === this.target){
             return Result.CORRECT;
         }
