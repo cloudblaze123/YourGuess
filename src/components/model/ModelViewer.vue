@@ -2,20 +2,12 @@
     <div>
         <div class="text-lg">ModelViewer</div>
         
-        <div class="flex flex-col">
-            <table class="border-collapse border-gray-300">
-                <tr v-for="(row, index) in weights">
-                    <td v-for="(col, colIndex) in row" class="border-2 border-gray-300">
-                        {{ col }}
-                    </td>
-                </tr>
-            </table>
-        </div>
-
-        <div class="text-lg">ModelGraphViewer</div>
         <ModelGraphViewer ref="modelGraphViewer" />
 
-        <textarea v-model="modelJsonStr" rows="10" disabled class="w-full"></textarea>
+        <div>
+            模型数据
+            <textarea v-model="modelJsonStr" rows="10" disabled class="w-full"></textarea>
+        </div>
     </div>
 </template>
 
@@ -34,14 +26,6 @@ defineExpose({
 
 
 let model: NeuralNetwork | null = null;
-
-
-const weights = ref([
-    [1, 2, 3],
-    [4, 5, 6],
-    [7, 8, 9],
-    [10, 11, 12]
-])
 
 
 const modelGraphViewer = ref<InstanceType<typeof ModelGraphViewer> | null>(null)
