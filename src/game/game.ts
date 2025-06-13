@@ -1,13 +1,13 @@
 
 
-export enum Result {
+enum Result {
     TOO_SMALL = -1,
     CORRECT,
     TOO_BIG,
 }
 
 
-export function getResultMessage(result: Result): string {
+function getResultMessage(result: Result): string {
     switch (result) {
         case Result.CORRECT:
             return "Correct";
@@ -21,8 +21,15 @@ export function getResultMessage(result: Result): string {
 }
 
 
+type GameOptions = {
+    min?: number,
+    max?: number,
+    target?: number,
+    maxGuessCount?: number,
+}
 
-export class Game{
+
+class Game{
     target:number = -1;
 
     guessNum:number = -1;
@@ -107,6 +114,17 @@ export class Game{
 
 
 
+    setOptions(options: GameOptions): void {
+        const { min, max, target, maxGuessCount } = options;
+        min && (this.min = min);
+        max && (this.max = max);
+        target && (this.target = target);
+        maxGuessCount && (this.maxGuessCount = maxGuessCount);
+    }
+
+
+
+
     toJSON():any{
         return {
             target: this.target,
@@ -135,3 +153,10 @@ export class Game{
 
 
 
+
+export {
+    Game,
+    type GameOptions,
+    Result,
+    getResultMessage,
+}

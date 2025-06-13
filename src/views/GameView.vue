@@ -17,7 +17,7 @@
             </div>
         </div>
         
-        <GameSettingView class="mt-4" />
+        <GameSettingView :game="game" class="mt-4" />
     </div>
 </template>
 
