@@ -14,7 +14,7 @@ class TrainerWorkerProvider {
     onAllFinished: () => void = () => { };
 
 
-    create(network: NeuralNetwork, game: Game, trainTimes: number, trainerName:String) {
+    create(network: NeuralNetwork, game: Game, trainTimes: number, trainerName:String, explorationRate:number) {
         const worker = new Worker();
         
 
@@ -32,6 +32,7 @@ class TrainerWorkerProvider {
             gameJSON: game.toJSON(),
             trainTimes,
             trainerName,
+            explorationRate,
         });
     }
 

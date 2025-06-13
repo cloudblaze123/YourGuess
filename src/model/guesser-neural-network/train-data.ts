@@ -106,14 +106,10 @@ class TrainDataFactory {
     _calTotalRewardOfStates(): number[] {
         const rewards: number[] = [];
 
-        let currentReward = 0;
-        let futureReward = 0;
+        let futureReward = this._getStateReward(this.states[this.states.length - 1]);
         let totalReward = 0;
         for (let i = this.states.length - 1; i >= 0 ; i--) {
-            const currentState = this.states[i];
-
-            currentReward = this._getStateReward(currentState);
-            totalReward = this._calTotalReward(currentReward, futureReward);
+            totalReward = this._calTotalReward(0, futureReward);
             futureReward = totalReward
 
             rewards.push(totalReward);
@@ -124,7 +120,7 @@ class TrainDataFactory {
     
     // 总体奖励理论下限为 -1 / (1 - discount)
     _calTotalReward(currentReward: number, futureReward: number): number {
-        const discount = 0.4;
+        const discount = 0.9;
         const totalReward = currentReward + discount * futureReward;
         return totalReward;
     }
@@ -136,16 +132,42 @@ class TrainDataFactory {
         if (state.getIndex() === 0) { // 初始状态无需计算奖励
             return 0;
         }
-
-        let reward = -0.5 * state.getIndex(); // 鼓励模型用尽可能少的次数猜到目标值
-
-        const normalizedTarget = normalize(state.target, state.min, state.max);
-        const normalizedGuess = normalize(state.getAction(), state.min, state.max);
-        const normalizedDstance = Math.abs(normalizedTarget - normalizedGuess);
         
-        reward += -Math.sqrt(normalizedDstance); // 猜测数与目标值的距离越接近0，奖励增长的速度越快
 
-        return reward;
+        // 奖励方案 v1
+        // 只有猜对了才奖励，猜错了奖励为 0
+        const guess = state.getAction();
+        const target = state.target;
+        if (guess === target) {
+            return 1;
+        }
+        return 0;
+
+
+        // 奖励方案 v2
+        // 距离目标值越近，奖励越高（越接近 1）
+        // const normalizedTarget = normalize(state.target, state.min, state.max);
+        // const normalizedGuess = normalize(state.getAction(), state.min, state.max);
+        // const normalizedDstance = Math.abs(normalizedTarget - normalizedGuess);
+        
+        // const normalizedDstance = Math.abs((state.target - state.getAction()) / (state.max - state.min));
+        // const reward = 1 - normalizedDstance; // 猜测数与目标值的距离越接近0，奖励越高，但不超过1
+        // if(reward > 1){
+        //     console.error('reward should not be greater than 1, there may be a bug')
+        // }
+        // return reward;
+
+
+        // 奖励方案 v3
+        // 距离目标值越近，奖励越高（越接近 1）
+        // 且猜中时有额外奖励
+        // const normalizedDstance = Math.abs((state.target - state.getAction()) / (state.max - state.min));
+        
+        // let reward = 1 - normalizedDstance; // 猜测数与目标值的距离越接近0，奖励越高，但不超过1
+        // if (normalizedDstance === 0) {
+        //     reward += 0.5; // 猜中奖励为 0.5
+        // }
+        // return reward;
     }
 }
 

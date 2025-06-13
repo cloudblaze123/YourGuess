@@ -8,13 +8,13 @@ import { Game } from "@/game/game";
 
 
 self.addEventListener("message", async (event) => {
-    const { networkJSON, gameJSON, trainTimes, trainerName } = event.data;
+    const { networkJSON, gameJSON, trainTimes, trainerName, exploraionRate } = event.data;
 
     const network = NeuralNetwork.fromJSON(networkJSON);
     const game = Game.fromJSON(gameJSON);
     const trainer = TrainerFactory.create(network, game, trainerName);
 
-    await trainer.start(trainTimes);
+    await trainer.start(trainTimes, exploraionRate);
     
 
     postMessage({

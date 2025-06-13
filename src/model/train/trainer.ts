@@ -24,11 +24,11 @@ class Trainer {
     }
 
 
-    async start(trainTimes: number): Promise<void> {
-        const guesserNetwork = new GuesserNeuralNetwork(this.network);
+    async start(trainTimes: number, explorationRate: number): Promise<void> {
+        const guesserNetwork = new GuesserNeuralNetwork(this.network, explorationRate);
 
         const game = this.game;
-        const attacker = new ModelAgent(this.network);
+        const attacker = new ModelAgent(this.network, explorationRate);
         const defender = new HonestAgent();
         const environment = new GameEnvironment(game, attacker, defender);
         environment.enableLog(false);

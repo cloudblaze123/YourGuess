@@ -15,17 +15,17 @@ const logger = new Logger("ModelAgent", false);
 class ModelAgent extends Agent {
     network?: GuesserNeuralNetwork | null;
 
-    constructor(network: NeuralNetwork | null = null){
+    constructor(network: NeuralNetwork | null = null, explorationRate: number = 0.1){
         super();
-        this.setNetwork(network);
+        this.setNetwork(network, explorationRate);
         this.onUpdate = () => {
             this.guess();
         }
     }
 
-    setNetwork(network: NeuralNetwork | null){
+    setNetwork(network: NeuralNetwork | null, explorationRate: number){
         if (network) {
-            this.network = new GuesserNeuralNetwork(network);
+            this.network = new GuesserNeuralNetwork(network, explorationRate);
         } else {
             this.network = null;
         }

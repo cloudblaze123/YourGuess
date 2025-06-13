@@ -11,7 +11,7 @@ import {
 } from 'mathjs';
 
 
-import { Activation, Sigmoid } from './activation';
+import { type ActivationType, Activation } from './activation';
 
 
 
@@ -27,7 +27,7 @@ class NeuralNetworkLayer {
 
     activation: Activation;
 
-    constructor(inputNodes: number, outputNodes: number, learningRate: number = 0.1, activationOption: string = 'sigmoid') {
+    constructor(inputNodes: number, outputNodes: number, learningRate: number = 0.1, activationOption: ActivationType = 'sigmoid') {
         this.inputNodes = inputNodes;
         this.outputNodes = outputNodes;
         this.learningRate = learningRate;
@@ -71,7 +71,8 @@ class NeuralNetworkLayer {
             outputNodes: this.outputNodes,
             learningRate: this.learningRate,
             weights: this.weights.toArray(),
-            bias: this.bias.toArray()
+            bias: this.bias.toArray(),
+            activation: this.activation.toJSON(),
         };
     }
 
@@ -79,6 +80,7 @@ class NeuralNetworkLayer {
         const layer = new NeuralNetworkLayer(json.inputNodes, json.outputNodes, json.learningRate);
         layer.weights = matrix(json.weights);
         layer.bias = matrix(json.bias);
+        layer.activation = Activation.fromJSON(json.activation);
         return layer;
     }
 
@@ -89,6 +91,7 @@ class NeuralNetworkLayer {
         const newLayer = new NeuralNetworkLayer(this.inputNodes, this.outputNodes, this.learningRate);
         newLayer.weights = this.weights.clone();
         newLayer.bias = this.bias.clone();
+        newLayer.activation = this.activation.copy();
         return newLayer;
     }
 

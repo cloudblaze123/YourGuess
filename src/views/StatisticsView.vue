@@ -54,7 +54,7 @@ const currentModelName = ref('')
 function handleModelSelect(modelName: string) {
     const model = modelStore.getModel(modelName)
     if (model) {
-        attacker.value = new ModelAgent(model)
+        attacker.value = new ModelAgent(model, 0)
         currentModelName.value = modelName
     } else {
         alert('Model not found')

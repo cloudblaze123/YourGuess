@@ -12,6 +12,9 @@ import { Game } from "@/game/game";
 class TrainEnvironment {
     network: NeuralNetwork;
     game: Game;
+    trainerType: TrainerType;
+    explorationRate: number;
+
     trainer: Trainer;
     parallelTrainer: ParallelTrainer;
 
@@ -19,9 +22,11 @@ class TrainEnvironment {
     onUpdate: (currentTrainTimes: number) => void = () => { };
 
     
-    constructor(network: NeuralNetwork, game: Game, trainerType: TrainerType = '') {
+    constructor(network: NeuralNetwork, game: Game, trainerType: TrainerType = '', explorationRate: number = 0.1) {
         this.network = network;
         this.game = game;
+        this.trainerType = trainerType;
+        this.explorationRate = explorationRate;
 
         this.trainer = TrainerFactory.create(network, game, trainerType);
         this.trainer.onUpdate = (currentTrainTimes) => {
@@ -41,11 +46,12 @@ class TrainEnvironment {
      * @param trainerName 训练器名称
      * @param openParallel 是否开启并行训练
      */
-    async start(trainTimes: number, trainerName: TrainerType = '', openParallel: boolean = false): Promise<void> {
+    async start(trainTimes: number, openParallel: boolean = false): Promise<void> {
         if (!openParallel) {
-            await this.trainer.start(trainTimes);
+            await this.trainer.start(trainTimes, this.explorationRate);
+            console.log('训练结束');
         } else {
-            await this.parallelTrainer.start(trainTimes, trainerName);
+            await this.parallelTrainer.start(trainTimes, this.trainerType, this.explorationRate);
         }
     }
 

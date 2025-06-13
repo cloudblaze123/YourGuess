@@ -18,10 +18,25 @@
 
 
         <div class="lg:w-52">
-            <div class="flex flex-col">
-                <div>训练次数</div>
-                <input type="number" v-model="trainTimesRef">
-                <button @click="train" class="btn btn-primary">开始训练</button>
+            <div class="flex flex-col space-y-2">
+                <div class="flex flex-col">
+                    <div>探索率</div>
+                    <input type="number" min="0" max="1" step="0.01" v-model="explorationRate">
+                </div>
+
+                <div class="flex flex-col">
+                    <div>训练次数</div>
+                    <input type="number" v-model="trainTimesRef">
+                </div>
+
+                <div class="flex flex-col mt-2">
+                    <label class="cursor-pointer">
+                        <input type="checkbox" v-model="isUsingCrossEntropy" class="toggle"/>
+                        使用交叉熵算法
+                    </label>
+                </div>
+
+                <button @click="train" class="btn btn-primary mt-4">开始训练</button>
                 <div class="mt-4 space-y-4">
                     <div>
                         <label class="cursor-pointer">
@@ -99,8 +114,9 @@ function updateGuessChart(game:Game) {
 import { NeuralNetwork } from '@/model/neural-network';
 let model: NeuralNetwork
 
-
+const explorationRate = ref(0.1);
 const trainTimesRef = ref(1);
+const isUsingCrossEntropy = ref(false);
 
 const gameRecordPlayerRef = ref<typeof GameRecordPlayer | null>(null);
 
@@ -127,7 +143,7 @@ async function train() {
         alert('请先选择模型')
         return
     }
-    const modelCopy = model.copy();
+    // const modelCopy = model.copy();
 
     const trainTimes = trainTimesRef.value;
     const startTime = new Date().getTime();
@@ -136,7 +152,13 @@ async function train() {
     const game = new Game();
     game.max = 20;
     game.min = 1;
-    const trainEnv = new TrainEnvironment(model, game);
+
+    let trainerType: '' | 'cross-entropy' = '';
+    if (isUsingCrossEntropy.value) {
+        console.log('using cross-entropy algorithm');
+        trainerType = 'cross-entropy';
+    }
+    const trainEnv = new TrainEnvironment(model, game, trainerType, explorationRate.value);
     
     trainEnv.onUpdate = (currentTrainTimes: number) => {
         trainProgress.value = currentTrainTimes;
@@ -154,7 +176,7 @@ async function train() {
 
     // 训练开始
     isTraining.value = true;
-    await trainEnv.start(trainTimes, 'cross-entropy', isEnableParrallel.value);
+    await trainEnv.start(trainTimes, isEnableParrallel.value);
     isTraining.value = false;
 
 
@@ -163,15 +185,15 @@ async function train() {
 
     
     // 打印模型权重变化，用于检查并行训练功能是否正常
-    const modelWeight0Array = model.layers[0].weights.toArray() as number[][];
-    const modelCopyWeight0Array = modelCopy.layers[0].weights.toArray() as number[][];
-    for (let i = 0; i < modelWeight0Array.length; i++) {
-        for (let j = 0; j < modelWeight0Array[i].length; j++) {
-            if (modelWeight0Array[i][j] !== modelCopyWeight0Array[i][j]) {
-                console.log('model weight changed', i, j, modelWeight0Array[i][j] - modelCopyWeight0Array[i][j])
-            }
-        }
-    }
+    // const modelWeight0Array = model.layers[0].weights.toArray() as number[][];
+    // const modelCopyWeight0Array = modelCopy.layers[0].weights.toArray() as number[][];
+    // for (let i = 0; i < modelWeight0Array.length; i++) {
+    //     for (let j = 0; j < modelWeight0Array[i].length; j++) {
+    //         if (modelWeight0Array[i][j] !== modelCopyWeight0Array[i][j]) {
+    //             console.log('model weight changed', i, j, modelWeight0Array[i][j] - modelCopyWeight0Array[i][j])
+    //         }
+    //     }
+    // }
 
 
     if (showChart.value) {

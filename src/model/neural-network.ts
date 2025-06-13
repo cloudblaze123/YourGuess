@@ -9,7 +9,7 @@ class NeuralNetwork {
 
     constructor(networkFormat: number[] = [], learningRate: number = 0.1) {
         for (let i = 0; i < networkFormat.length - 1; i++) {
-            const layer = new NeuralNetworkLayer(networkFormat[i], networkFormat[i + 1], learningRate);
+            const layer = new NeuralNetworkLayer(networkFormat[i], networkFormat[i + 1], learningRate, 'truncatelinear');
             this.layers.push(layer);
         }
     }

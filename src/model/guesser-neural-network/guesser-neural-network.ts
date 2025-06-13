@@ -93,8 +93,8 @@ class GuesserNeuralNetwork {
         const targets = [trainData.action];
         
         const reward = trainData.reward;
-        // 奖励越高，学习率越大
-        const newLearningRate = 0.2 * Math.min(Math.exp(reward), 1);
+        // 奖励越高，学习率越大，奖励为负数时，学习率为 0
+        const newLearningRate = 0.04 * Math.min(Math.max(reward, 0), 1);
 
         // 调试日志
         logger.log("guess", trainData.originGuess);
