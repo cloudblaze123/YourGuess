@@ -1,7 +1,7 @@
 import { Agent } from "./agent";
 import { GuessAction, endGameAction } from "@/game/action";
 
-import { NeuralNetwork } from "@/model/neural-network";
+import { NeuralNetwork } from "@/model/neural-network/neural-network";
 import { GuesserNeuralNetwork } from "@/model/guesser-neural-network/guesser-neural-network";
 
 import { Logger } from "@/utils/logger";

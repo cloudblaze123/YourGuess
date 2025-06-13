@@ -17,7 +17,7 @@ import { ref } from 'vue'
 
 import ModelGraphViewer from '@/components/model/ModelGraphViewer.vue'
 
-import { NeuralNetwork } from '@/model/neural-network';
+import { NeuralNetwork } from '@/model/neural-network/neural-network';
 
 
 defineExpose({

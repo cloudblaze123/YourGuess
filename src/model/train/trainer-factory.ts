@@ -2,7 +2,7 @@ import { Trainer } from './trainer';
 import { CrossEntropyTrainer } from './cross-entropy-trainer';
 
 import { Game } from '@/game/game';
-import { NeuralNetwork } from '../neural-network';
+import { NeuralNetwork } from '../neural-network/neural-network';
 
 
 type TrainerType = '' | 'cross-entropy';

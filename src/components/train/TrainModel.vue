@@ -111,7 +111,7 @@ function updateGuessChart(game:Game) {
 }
 
 
-import { NeuralNetwork } from '@/model/neural-network';
+import { NeuralNetwork } from '@/model/neural-network/neural-network';
 let model: NeuralNetwork
 
 const explorationRate = ref(0.1);

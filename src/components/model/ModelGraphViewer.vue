@@ -8,7 +8,7 @@
 import { onMounted, onUnmounted, ref } from 'vue';
 import * as echarts from 'echarts';
 
-import { NeuralNetwork } from '@/model/neural-network';
+import { NeuralNetwork } from '@/model/neural-network/neural-network';
 import { NeuralNetworkLayer } from '@/model/neural-network-layer';
 
 

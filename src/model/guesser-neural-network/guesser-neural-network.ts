@@ -1,4 +1,4 @@
-import { NeuralNetwork } from "../neural-network";
+import { NeuralNetwork } from "../neural-network/neural-network";
 
 import { GameState } from "./game-state";
 import { TrainData, TrainDataFactory } from "./train-data";

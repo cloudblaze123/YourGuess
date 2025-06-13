@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 
-import { NeuralNetwork } from '@/model/neural-network'
+import { NeuralNetwork } from '@/model/neural-network/neural-network'
 
 
 export const useModelStore = defineStore('model', {

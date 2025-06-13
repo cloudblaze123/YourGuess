@@ -70,7 +70,7 @@ function onSelectModel(propModelName: string) {
 
 
 
-import { NeuralNetwork } from '@/model/neural-network';
+import { NeuralNetwork } from '@/model/neural-network/neural-network';
 const networkFormatStr = ref('2 4 3 1')
 
 function createModel() {

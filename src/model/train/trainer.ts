@@ -1,5 +1,5 @@
 import { GuesserNeuralNetwork } from "@/model/guesser-neural-network/guesser-neural-network";
-import { NeuralNetwork } from "../neural-network";
+import { NeuralNetwork } from "../neural-network/neural-network";
 
 
 import { GameEnvironment } from "@/game/game-environment";

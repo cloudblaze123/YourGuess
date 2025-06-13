@@ -1,6 +1,6 @@
 import { TrainerWorkerProvider } from "./trainer-worker-provider";
 
-import { NeuralNetwork } from "../neural-network";
+import { NeuralNetwork } from "../neural-network/neural-network";
 import { Game } from "@/game/game";
 
 

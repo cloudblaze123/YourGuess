@@ -41,7 +41,7 @@ const forwardResults = ref('')
 
 
 
-import { NeuralNetwork } from '@/model/neural-network'
+import { NeuralNetwork } from '@/model/neural-network/neural-network'
 
 // 创建神经网络实例
 let nn = new NeuralNetwork([3, 4, 2]);
