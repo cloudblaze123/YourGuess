@@ -13,6 +13,8 @@ import { Trainer } from "./trainer";
 
 import { FixedSizeQueue } from "@/utils/queue";
 
+import { Random } from "@/utils/math";
+
 type Episode = TrainData[];
 
 
@@ -27,7 +29,7 @@ class CrossEntropyTrainer extends Trainer {
     batchSize: number = 25;
     percentile: number = 0.25;
 
-    lastBatchRewardBuffer: FixedSizeQueue = new FixedSizeQueue(20);
+    lastBatchRewardBuffer: FixedSizeQueue = new FixedSizeQueue(40);
 
     constructor(network: NeuralNetwork, game: Game) {
         super(network, game);
@@ -41,7 +43,7 @@ class CrossEntropyTrainer extends Trainer {
      * @param batchSize 批大小
      * @param percentile 保留百分比
      */
-    async start(trainTimes: number, explorationRate: number, batchNumber: number = 3, batchSize: number = 100, percentile: number = 0.7): Promise<void> {
+    async start(trainTimes: number, explorationRate: number, batchNumber: number = 10, batchSize: number = 25, percentile: number = 0.25): Promise<void> {
         this.explorationRate = explorationRate;
         this.trainTimes = trainTimes;
         this.progress = 0;
@@ -49,6 +51,9 @@ class CrossEntropyTrainer extends Trainer {
         this.batchNumber = batchNumber;
         this.batchSize = batchSize;
         this.percentile = percentile;
+
+        // 奖励缓存至少能容纳 batchNumber * 3 个批次的奖励
+        this.lastBatchRewardBuffer = new FixedSizeQueue(3 * batchNumber);
 
         while (this.progress < this.trainTimes) {
             await this._start(batchNumber, batchSize, percentile);
@@ -91,17 +96,24 @@ class CrossEntropyTrainer extends Trainer {
 
     async generateEpisodeBatches(batchNumber: number, batchSize: number): Promise<Episode[][]> {
         const batches: Episode[][] = [];
+        const seed = Math.random();
         for (let i = 0; i < batchNumber; i++) {
-            batches.push(await this.generateEpisodeBatch(batchSize));
+            // 使用相同的随机种子生成游戏
+            // 确保不同批次之间的游戏对象产生的目标数序列是相同的
+            // 以保证公平
+            batches.push(await this.generateEpisodeBatch(batchSize, seed));
         }
         return batches;
     }
 
     // 生成训练片段批
-    async generateEpisodeBatch(batchSize: number): Promise<Episode[]> {
+    async generateEpisodeBatch(batchSize: number, seed: number = Math.random()): Promise<Episode[]> {
         const episodes: Episode[] = [];
 
         const game = this.game;
+        const random = new Random(seed);
+        game.random = random.next.bind(random)
+
         const attacker = new ModelAgent(this.network, this.explorationRate);
         const defender = new HonestAgent();
         const environment = new GameEnvironment(game, attacker, defender);
@@ -150,16 +162,17 @@ class CrossEntropyTrainer extends Trainer {
         // console.log("rewardEpisodeBatchPairsSorted", rewardEpisodeBatchPairsSorted)
         console.log("sorted rewards", rewardEpisodeBatchPairsSorted.map(pair => pair.reward.toFixed(3)))
         
+        
+        // 更新奖励缓存
+        for (const {reward} of rewardEpisodeBatchPairs) {
+            this.lastBatchRewardBuffer.enqueue(reward);
+        }
+
+
         // 选取排位前 retentionSize 个片段批
         for (let i = 0; filteredEpisodeBatches.length < retentionSize; i++) {
             const {batch} = rewardEpisodeBatchPairsSorted[i];
             filteredEpisodeBatches.push(batch);
-        }
-        
-
-        // 更新奖励缓存
-        for (let i = 0; i < filteredEpisodeBatches.length; i++) {
-            this.lastBatchRewardBuffer.enqueue(rewardEpisodeBatchPairsSorted[i].reward);
         }
 
 
@@ -218,6 +231,8 @@ class CrossEntropyTrainer extends Trainer {
 
     applyBaseline(episode: Episode, baseline: number): void {
         for (const data of episode) {
+            // console.log('data.reward', data.reward)
+            // console.log('after baseline', data.reward - baseline)
             data.reward -= baseline;
         }
     }

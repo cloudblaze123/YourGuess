@@ -117,9 +117,12 @@ class GuesserNeuralNetwork {
         // 同时奖励为负数时，最小不小于一个小负数，防止过大的负奖励破坏训练
         reward = Math.max(reward, -0.01);
 
-
+        
         // 奖励越高，学习率越大
         const newLearningRate = 0.1 * reward;
+
+        // console.log("reward", reward);
+        // console.log("newLearningRate", newLearningRate);
 
         // 调试日志
         logger.log("guess", trainData.originGuess);

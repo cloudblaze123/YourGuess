@@ -30,6 +30,7 @@ type GameOptions = {
 
 
 class Game{
+    random:() => number = Math.random;
     target:number = -1;
 
     guessNum:number = -1;
@@ -53,7 +54,7 @@ class Game{
 
 
     _generateRandomNumber(min: number, max: number): number {
-        return Math.floor(Math.random() * (max - min + 1)) + min;
+        return Math.floor(this.random() * (max - min + 1)) + min;
     }
 
 

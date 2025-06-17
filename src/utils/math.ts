@@ -43,8 +43,36 @@ function normalize(num: number, min: number, max: number): number {
 
 
 
+
+// 可设置seed的随机数生成器
+// 使用线性同余生成
+class Random {
+    seed: number;
+
+    constructor(seed: number = Math.random()) {
+        this.seed = seed;
+    }
+
+    // 生成并返回下一个随机数
+    // 每次调用生成的随机数不相同
+    // 但使用相同的 seed 生成的 随机数序列 相同
+    next() {
+        this.seed = ((this.seed * 9301 + 49297) % 233280);
+        return this.seed / 233280.0;
+    }
+
+    // 使用相同的seed，生成的随机数始终相同
+    random() {
+        return ((this.seed * 9301 + 49297) % 233280) / 233280.0;
+    }
+}
+
+
+
+
 export {
     normalRandom,
     truncatedRandomNormal,
     normalize,
+    Random
 }
