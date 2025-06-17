@@ -28,16 +28,11 @@ function truncatedRandomNormal(mean: number, stdDev: number, lower: number, uppe
 }
 
 
-// 将一个数值标准化到 0-1 之间
+// 将一个数值根据 min 和 max 范围进行归一化
+// 如果数值在 min 和 max 之间，则返回 0-1 之间的一个值
+// 如果数值小于 min，则返回负数
+// 如果数值大于 max，则返回大于 1 的正数
 function normalize(num: number, min: number, max: number): number {
-    if (min > max) {
-        throw new Error("Min must be less than or equal to max.");
-    }
-    if (num < min || num > max) {
-        console.warn(`Number ${num} is out of range [${min}, ${max}].`);
-        throw new Error("Number is out of range.");
-    }
-
     const range = Math.abs(max - min);
     if (range === 0) {
         return 0;

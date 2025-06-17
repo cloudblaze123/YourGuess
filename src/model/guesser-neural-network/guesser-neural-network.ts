@@ -41,7 +41,7 @@ class GuesserNeuralNetwork {
     }
 
     makeGuess(gameState: GameState): number {
-        if (Math.random() < this.explorationRate) {
+        if (Math.random() <= this.explorationRate) {
             return this.makeRandomGuess(gameState);
         } else {
             return this.makeNetworkGuess(gameState);
@@ -58,7 +58,7 @@ class GuesserNeuralNetwork {
         const max = gameState.max;
         const min = gameState.min;
         const output = this.network.forward(normalizedInputs)[0];
-        const guess = Math.round(output * (max - min) + min);
+        const guess = this._makeGuess(output, min, max);
 
         return guess;
     }
@@ -66,10 +66,24 @@ class GuesserNeuralNetwork {
     makeRandomGuess(gameState: GameState): number {
         const max = gameState.max;
         const min = gameState.min;
-        const guess = Math.round(Math.random() * (max - min) + min);
+        const guess = this._makeGuess(Math.random(), min, max);
         logger.log("random guess", guess);
         return guess;
     }
+
+
+    // normalizedGuess 范围为 [0, 1]
+    // 返回值范围为 [min, max]
+    _makeGuess(normalizedGuess: number, min: number, max: number): number {
+        const range = max - min + 1;
+        const guess = Math.min(
+            Math.floor(normalizedGuess * range + min), 
+            max
+        );
+        return guess;
+    }
+
+
 
 
     trainByGame(game: Game): void {
@@ -92,9 +106,20 @@ class GuesserNeuralNetwork {
         const inputs = this._normalizeInputs(trainData.state);
         const targets = [trainData.action];
         
-        const reward = trainData.reward;
-        // 奖励越高，学习率越大，奖励为负数时，学习率为 0
-        const newLearningRate = 0.04 * Math.min(Math.max(reward, 0), 1);
+        let reward = trainData.reward;
+
+
+        // 奖励最大不超过1
+        reward = Math.min(reward, 1);
+
+        // 奖励为负数时，最小不小于 0.1 * 奖励
+        reward = Math.max(reward, 0.1*reward);
+        // 同时奖励为负数时，最小不小于一个小负数，防止过大的负奖励破坏训练
+        reward = Math.max(reward, -0.01);
+
+
+        // 奖励越高，学习率越大
+        const newLearningRate = 0.1 * reward;
 
         // 调试日志
         logger.log("guess", trainData.originGuess);

@@ -41,7 +41,7 @@ class CrossEntropyTrainer extends Trainer {
      * @param batchSize 批大小
      * @param percentile 保留百分比
      */
-    async start(trainTimes: number, explorationRate: number, batchNumber: number = 3, batchSize: number = 100, percentile: number = 0.2): Promise<void> {
+    async start(trainTimes: number, explorationRate: number, batchNumber: number = 3, batchSize: number = 100, percentile: number = 0.7): Promise<void> {
         this.explorationRate = explorationRate;
         this.trainTimes = trainTimes;
         this.progress = 0;
