@@ -85,6 +85,9 @@ async function startAssessment() {
         return;
     }
 
+    hasAssembled.value = true;
+
+
     let sampleNumber_ = sampleNumber.value;
     let winCount_ = 0;
     let round = 0;
@@ -108,8 +111,6 @@ async function startAssessment() {
     winCount.value = winCount_;
     winRate.value = winCount_ / sampleNumber_ * 100;
     averageRound.value = round / sampleNumber_;
-
-    hasAssembled.value = true;
 }
 
 </script>

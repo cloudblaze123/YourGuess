@@ -135,7 +135,7 @@ let model: NeuralNetwork
 
 const explorationRate = ref(0.1);
 const trainTimesRef = ref(1);
-const isUsingCrossEntropy = ref(false);
+const isUsingCrossEntropy = ref(true);
 
 const gameRecordPlayerRef = ref<typeof GameRecordPlayer | null>(null);
 
@@ -152,7 +152,7 @@ import { TrainEnvironment } from '@/model/train/train-environment';
 import { GameRecord } from '@/game/game-record';
 
 
-const isEnableParrallel = ref(false);
+const isEnableParrallel = ref(true);
 
 const trainingTime = ref(0);
 
