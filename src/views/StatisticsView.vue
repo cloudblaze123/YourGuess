@@ -24,7 +24,7 @@
         </div>
 
         <WinRateAssessment :attacker="attacker" :game="game" />
-        <GraphGameEnvironment ref="graphGameEnvironmentRef" :attacker="attacker" :defender="defender" />
+        <GraphGameEnvironment ref="graphGameEnvironmentRef" :attacker="attacker" :defender="defender" :default-game-options="game.getOptions()"/>
 
     </div>
 </template>
@@ -64,6 +64,8 @@ const graphGameEnvironmentRef = ref<InstanceType<typeof GraphGameEnvironment> | 
 
 import { Game } from '@/game/game';
 const game = ref(new Game());
+game.value.min = 1;
+game.value.max = 20;
 
 
 import { type GameOptions } from '@/game/game';

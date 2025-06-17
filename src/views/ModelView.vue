@@ -14,7 +14,7 @@
             <div v-show="navigation ==='model-add'">
                 <div class="flex flex-col mb-16">
                     <div>创建模型</div>
-                    <div>用空格分隔的每层节点数，形如：2 4 3 1</div>
+                    <div>用空格分隔的每层节点数，形如：10 20 1</div>
                     <input type="text" v-model="networkFormatStr" placeholder="用单个空格分隔的每层节点数，形如：2 4 3 1" />
                     <button @click="createModel" class="btn btn-primary">创建模型</button>
                 </div>
@@ -71,7 +71,7 @@ function onSelectModel(propModelName: string) {
 
 
 import { NeuralNetwork } from '@/model/neural-network/neural-network';
-const networkFormatStr = ref('2 4 3 1')
+const networkFormatStr = ref('10 20 1')
 
 function createModel() {
     const networkStr = networkFormatStr.value.trim()

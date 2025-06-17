@@ -112,6 +112,14 @@ class Game{
     }
 
 
+    getOptions(): GameOptions {
+        return {
+            min: this.min,
+            max: this.max,
+            target: this.target,
+            maxGuessCount: this.maxGuessCount,
+        };
+    }
 
 
     setOptions(options: GameOptions): void {

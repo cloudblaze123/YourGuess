@@ -20,6 +20,7 @@ import { Game } from '@/game/game'
 
 import { Agent } from '@/game/agent/agent'
 
+import { type GameOptions } from '@/game/game'
 
 const props = defineProps({
     attacker: {
@@ -29,6 +30,10 @@ const props = defineProps({
     defender: {
         type: Agent,
         required: true
+    },
+    // 可选，游戏默认设置
+    defaultGameOptions: {
+        type: Object as () => GameOptions,
     }
 })
 
@@ -61,6 +66,12 @@ const result = ref(Result.CORRECT)
 
 const guessHistory = ref<number[]>([])
 const resultHistory = ref<Result[]>([])
+
+
+// 加载外部传入的默认游戏设置
+if (props.defaultGameOptions) {
+    game.setOptions(props.defaultGameOptions)
+}
 
 
 
