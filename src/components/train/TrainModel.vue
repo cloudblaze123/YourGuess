@@ -19,6 +19,8 @@
 
         <div class="lg:w-52">
             <div class="flex flex-col space-y-2">
+                <MiniGameSetting :game="game" @setting-updated="onSettingUpdated" />
+
                 <div class="flex flex-col">
                     <div>探索率</div>
                     <input type="number" min="0" max="1" step="0.01" v-model="explorationRate">
@@ -80,6 +82,8 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import ModelList from '../model/ModelList.vue';
+
+import MiniGameSetting from '@/components/train/MiniGameSetting.vue';
 import GameRecordPlayer from '../static/GameRecordPlayer.vue';
 
 
@@ -97,6 +101,21 @@ function onModelSelected(propModelName: string) {
     model = modelStore.getModel(propModelName)
     updateModelChart()
 }
+
+
+
+
+const game = new Game();
+game.max = 20;
+game.min = 1;
+
+import { type GameOptions } from '@/game/game';
+function onSettingUpdated(newOptions: GameOptions) {
+    game.setOptions(newOptions)
+}
+
+
+
 
 
 function updateModelChart() {
@@ -148,10 +167,7 @@ async function train() {
     const trainTimes = trainTimesRef.value;
     const startTime = new Date().getTime();
     
-    
-    const game = new Game();
-    game.max = 20;
-    game.min = 1;
+
 
     let trainerType: '' | 'cross-entropy' = '';
     if (isUsingCrossEntropy.value) {
