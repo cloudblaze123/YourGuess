@@ -120,7 +120,7 @@ class TrainDataFactory {
     
     // 总体奖励理论下限为 -1 / (1 - discount)
     _calTotalReward(currentReward: number, futureReward: number): number {
-        const discount = 0.9;
+        const discount = 0.95;
         const totalReward = currentReward + discount * futureReward;
         return totalReward;
     }
