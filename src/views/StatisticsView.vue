@@ -4,7 +4,7 @@
         
         <div class="space-x-2">
             <label class="text-md">猜数代理</label>
-            <select name="select" v-model="selectedOption" @change="handleAgentSelect" class="dark:bg-base-100 dark:text-white">
+            <select name="select" v-model="selectedOption" @change="handleAgentSelect" class="">
                 <option v-for="value, key in items" :value="key">{{ key }}</option>
             </select>
         </div>
