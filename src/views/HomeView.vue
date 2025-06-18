@@ -1,7 +1,7 @@
 <template>
     <!-- name of each tab group should be unique -->
     <div class="tabs tabs-border">
-        <input type="radio" name="my_tabs_2" class="tab" aria-label="Game" checked="checked"/>
+        <input type="radio" name="my_tabs_2" class="tab" aria-label="Game" checked />
         <div class="tab-content border-base-300 bg-base-100 p-8">
             <GameView />
         </div>
