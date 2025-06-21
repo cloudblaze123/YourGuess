@@ -57,13 +57,22 @@ class NeuralNetworkLayer {
         
         // 计算权重更新量
         const gradientOutput = dotMultiply(this.activation.derivative(outputs), errors);
-        const gradientOutputScaled = multiply(gradientOutput, this.learningRate);
-        const deltaWeightsScaled = multiply(gradientOutputScaled, transpose(inputs));
-
+        const deltaWeights = multiply(gradientOutput, transpose(inputs));
+        const deltaWeightsScaled = multiply(deltaWeights, this.learningRate);
+        
         // 更新权重
         this.weights = add(this.weights, deltaWeightsScaled);
-        this.bias = add(this.bias, dotMultiply(gradientOutputScaled, 1));
+
+
+        // 计算偏置更新量
+        const gradientBias = gradientOutput;
+        const deltaBias = dotMultiply(gradientBias, 1);
+        const deltaBiasScaled = multiply(deltaBias, this.learningRate);
+
+        // 更新偏置
+        this.bias = add(this.bias, dotMultiply(deltaBiasScaled, 1));
     }
+
 
     toJSON(): object {
         return {
